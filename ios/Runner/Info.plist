@@ -43,6 +43,18 @@
 	<string>This app needs access to location when open.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>We need to access to the microphone to record audio file</string>
+	<key>NSContactsUsageDescription</key>
+	<string>We need to access contacts.</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>We need to access calendar data.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>We need to access to photo library.</string>
+	<key>NSAppleMusicUsageDescription</key>
+	<string>We need to access to media library.</string>
+	<key>NSMotionUsageDescription</key>
+	<string>We need to access to the device motion data</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>We need to send data to Apple’s speech recognition servers.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
