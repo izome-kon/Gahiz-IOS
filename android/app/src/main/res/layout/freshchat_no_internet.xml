@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/freshchat_no_internet_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?attr/freshchatNoInternetImage" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        style="?attr/freshchatErrorTitleTextStyle"
+        android:layout_marginTop="30dp"
+        android:text="@string/freshchat_no_connection" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        style="?attr/freshchatErrorSubtitleTextStyle"
+        android:layout_marginTop="10dp"
+        android:text="@string/freshchat_check_internet_connection" />
+
+</LinearLayout>

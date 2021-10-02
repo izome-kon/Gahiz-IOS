@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+    <!-- Not adding freshchatMessageListItemStyle to parent-->
+    <!-- freshchat_listitem_message already had freshchatMessageListItemStyle-->
+    <!-- We can optimise if customer reaches out-->
+
+    <include
+        layout="@layout/freshchat_listitem_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/freshchat_message_carousel_recycler_view"
+        style="?attr/freshchatMessageListItemStyle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:clipToPadding="false"
+        android:minHeight="@dimen/freshchat_carousel_min_height"
+        android:orientation="horizontal"
+        android:paddingStart="16dp"
+        android:paddingLeft="16dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="16dp" />
+</LinearLayout>

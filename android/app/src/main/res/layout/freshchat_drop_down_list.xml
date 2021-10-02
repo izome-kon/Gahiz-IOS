@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/freshchat_drop_down_recycler_view_container"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/freshchat_bottom_sheet_bg_color">
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/freshchat_drop_down_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@color/freshchat_white"
+        android:elevation="@dimen/freshchat_message_composer_elevation"
+        tools:layout_height="200dp" />
+</FrameLayout>

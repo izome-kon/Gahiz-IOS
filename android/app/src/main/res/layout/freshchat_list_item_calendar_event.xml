@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="?attr/freshchatMessageListItemStyle"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/freshchat_message_item_margin"
+    android:gravity="right|end"
+    android:orientation="vertical">
+
+    <com.freshchat.consumer.sdk.ui.CalendarEventCardView
+        android:id="@+id/freshchat_calendar_event"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:minWidth="@dimen/freshchat_calendar_event_card_min_width"
+        android:layout_margin="2dp" />
+
+    <include
+        layout="@layout/freshchat_message_upload_status"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_width="@dimen/freshchat_message_upload_status_icon_size"
+        android:layout_height="@dimen/freshchat_message_upload_status_icon_size"
+        android:layout_below="@id/freshchat_calendar_event" />
+
+    <include
+        layout="@layout/freshchat_message_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignWithParentIfMissing="true"
+        android:layout_below="@id/freshchat_calendar_event"
+        android:layout_toStartOf="@id/freshchat_message_upload_status"
+        android:layout_toLeftOf="@id/freshchat_message_upload_status" />
+
+
+</RelativeLayout>
