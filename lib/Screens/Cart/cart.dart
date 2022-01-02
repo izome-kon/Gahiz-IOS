@@ -37,9 +37,9 @@ class _CartPageState extends State<CartPage> {
       });
       print('print = ${cartProvider.productsList}');
       await CartRepository().getCartAddCollectionResponse(
-          '', user_id.value, cartProvider.productsList);
+          '', user_id.$, cartProvider.productsList);
       cartProvider.setCartList(
-          await CartRepository().getCartResponseList(user_id.value));
+          await CartRepository().getCartResponseList(user_id.$));
       setState(() {
         isLoading = false;
       });

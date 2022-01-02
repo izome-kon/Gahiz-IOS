@@ -6,9 +6,11 @@ import 'package:denta_needs/Provider/user_provider.dart';
 import 'package:denta_needs/Responses/Order/order_detail_response.dart';
 import 'package:denta_needs/Responses/Order/order_item_response.dart';
 import 'package:denta_needs/Utils/theme.dart';
+import 'package:denta_needs/app_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:freshchat_sdk/freshchat_sdk.dart';
+import 'package:full_screen_image/full_screen_image.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:timeline_tile/timeline_tile.dart';
@@ -40,14 +42,12 @@ class _PaymentPageState extends State<OrderDetailsPage> {
   }
 
   setStepIndex(key) {
-    print(key);
-
     _stepIndex = _steps.indexOf(key);
-    print(_stepIndex);
     setState(() {});
   }
 
-  Card buildOrderedProductItemsCard(item) {
+  Card buildOrderedProductItemsCard(OrderItem item) {
+    print('img=' + item.thumbnail_image);
     return Card(
       shape: RoundedRectangleBorder(
         side:
@@ -75,6 +75,20 @@ class _PaymentPageState extends State<OrderDetailsPage> {
               padding: const EdgeInsets.only(bottom: 8.0),
               child: Row(
                 children: [
+                  Container(
+                    width: 75,
+                    height: 75,
+                    child: FullScreenWidget(
+                        child: Hero(
+                      child: FadeInImage.assetNetwork(
+                        placeholder: 'assets/images/placeholder.png',
+                        image: AppConfig.BASE_PATH + item.thumbnail_image,
+                        width: 120,
+                      ),
+                      tag: 'productImage${item.thumbnail_image}',
+                    )),
+                  ),
+                  Spacer(),
                   Text(
                     item.quantity.toString() + " x ",
                     style: TextStyle(
@@ -114,6 +128,7 @@ class _PaymentPageState extends State<OrderDetailsPage> {
     );
   }
 
+// timeline
   buildTimeLineTiles() {
     return SizedBox(
       height: 100,
@@ -222,7 +237,7 @@ class _PaymentPageState extends State<OrderDetailsPage> {
                         fontSize: 16)
                     : null,
               ),
-              beforeLineStyle: _stepIndex >= 1
+              afterLineStyle: _stepIndex >= 1
                   ? LineStyle(
                       color: Colors.green,
                       thickness: 5,
@@ -231,7 +246,7 @@ class _PaymentPageState extends State<OrderDetailsPage> {
                       color: fontColor,
                       thickness: 4,
                     ),
-              afterLineStyle: _stepIndex >= 2
+              beforeLineStyle: _stepIndex >= 2
                   ? LineStyle(
                       color: Colors.green,
                       thickness: 5,

@@ -1,19 +1,12 @@
-import 'package:denta_needs/Apis/order_repository.dart';
 import 'package:denta_needs/Apis/wishlist_repository.dart';
 import 'package:denta_needs/Common/shimmer_helper.dart';
-import 'package:denta_needs/Common/toast_component.dart';
 import 'package:denta_needs/Helper/applocal.dart';
-import 'package:denta_needs/Helper/shared_value_helper.dart';
-import 'package:denta_needs/Provider/user_provider.dart';
-import 'package:denta_needs/Responses/Order/order_mini_response.dart';
 import 'package:denta_needs/Responses/WishList/wishlist_response.dart';
-import 'package:denta_needs/Screens/MyOrders/order_card.dart';
 import 'package:denta_needs/Screens/Product/product_page2.dart';
 import 'package:denta_needs/Utils/theme.dart';
 import 'package:denta_needs/app_config.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
-import 'package:toast/toast.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
@@ -25,6 +18,7 @@ class WishList extends StatefulWidget {
 class _WishListState extends State<WishList> {
   WishlistResponse wishlistResponse;
 
+  /// get data from api (userWishList)
   getData() async {
     wishlistResponse = await WishListRepository().getUserWishlist();
     setState(() {});
@@ -38,9 +32,7 @@ class _WishListState extends State<WishList> {
 
   @override
   Widget build(BuildContext context) {
-    return
-
-      Scaffold(
+    return Scaffold(
       appBar: AppBar(
         backgroundColor: whiteColor,
         centerTitle: true,
@@ -82,6 +74,7 @@ class _WishListState extends State<WishList> {
     );
   }
 
+  /// build wishList cards
   buildWishListItem(index) {
     return InkWell(
       onTap: () {
@@ -173,6 +166,7 @@ class _WishListState extends State<WishList> {
     );
   }
 
+  /// on page refresh
   Future<void> onRefresh() async {
     setState(() {});
     getData();

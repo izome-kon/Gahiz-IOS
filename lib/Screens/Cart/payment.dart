@@ -54,15 +54,15 @@ class _PaymentPageState extends State<PaymentPage> {
       });
       print('print = ${cartProvider.productsList}');
       await CartRepository().getCartAddCollectionResponse(
-          '', user_id.value, cartProvider.productsList);
-      cartProvider.setCartList(
-          await CartRepository().getCartResponseList(user_id.value));
+          '', user_id.$, cartProvider.productsList);
+      cartProvider
+          .setCartList(await CartRepository().getCartResponseList(user_id.$));
       setState(() {
         isLoading = false;
       });
       cartProvider.sendUpdateRequest = false;
     } else
-      cartList = await CartRepository().getCartResponseList(user_id.value);
+      cartList = await CartRepository().getCartResponseList(user_id.$);
     getSummery();
     setState(() {});
   }
@@ -769,7 +769,7 @@ class _PaymentPageState extends State<PaymentPage> {
       cartSummary = null;
     });
     await CouponRepository()
-        .getCouponRemoveResponse(user_id.value)
+        .getCouponRemoveResponse(user_id.$)
         .then((value) {
       getSummery();
       enableToEnterCupon = true;
@@ -826,7 +826,10 @@ class _PaymentPageState extends State<PaymentPage> {
           );
           Provider.of<CartProvider>(context, listen: false)
               .setCartProductsListToEmpty();
-          Navigator.of(context)..pop()..pop()..pop();
+          Navigator.of(context)
+            ..pop()
+            ..pop()
+            ..pop();
           Navigator.push(
               context,
               MaterialPageRoute(

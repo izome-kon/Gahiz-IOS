@@ -43,7 +43,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 SizedBox(
                   height: 10,
                 ),
-                avatar_original.value != ''
+                avatar_original.$ != ''
                     ? CircleAvatar(
                         radius: 70,
                         backgroundColor: primaryColor,
@@ -55,8 +55,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             child: FadeInImage.assetNetwork(
                               placeholder: 'assets/images/placeholder.png',
                               fit: BoxFit.cover,
-                              image:
-                                  AppConfig.BASE_PATH + avatar_original.value,
+                              image: AppConfig.BASE_PATH + avatar_original.$,
                             ),
                           ),
                         ),
@@ -69,14 +68,14 @@ class _ProfilePageState extends State<ProfilePage> {
                   height: 5,
                 ),
                 Text(
-                  '${user_name.value}',
+                  '${user_name.$}',
                   style: TextStyle(
                       color: fontColor,
                       fontSize: 14,
                       fontWeight: FontWeight.bold),
                 ),
                 Text(
-                  '${user_phone.value}',
+                  '${user_phone.$}',
                   style: TextStyle(
                     color: fontColor,
                     fontSize: 12,
@@ -98,7 +97,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   style: TextStyle(color: fontColor.withOpacity(0.5)),
                 ),
                 trailing: Text(
-                  '${user_name.value}',
+                  '${user_name.$}',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),
@@ -109,7 +108,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   style: TextStyle(color: fontColor.withOpacity(0.5)),
                 ),
                 trailing: Text(
-                  '${user_phone.value}',
+                  '${user_phone.$}',
                   style: TextStyle(fontWeight: FontWeight.bold),
                 ),
               ),

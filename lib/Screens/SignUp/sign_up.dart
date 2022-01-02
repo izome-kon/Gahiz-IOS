@@ -23,7 +23,7 @@ import 'package:flutter/services.dart';
 import 'package:freshchat_sdk/freshchat_sdk.dart';
 import 'package:freshchat_sdk/freshchat_user.dart';
 import 'package:provider/provider.dart';
-
+import 'package:sweetsheet/sweetsheet.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
@@ -38,9 +38,10 @@ class SignUp extends StatefulWidget {
 }
 
 class _LoginState extends State<SignUp> {
-  AccountType accountType;
+  userInfo.AccountType accountType;
   PageController pageController;
   int curPage;
+  final SweetSheet _sweetSheet = SweetSheet();
   bool loading = false;
   AuthApi authApi = new AuthApi();
   MobileVerificationState currentState =
@@ -151,7 +152,8 @@ class _LoginState extends State<SignUp> {
                                                               .center,
                                                       children: [
                                                         Text(
-                                                          getLang(context, "Submit"),
+                                                          getLang(context,
+                                                              "Submit"),
                                                           style: TextStyle(
                                                               fontSize: 15,
                                                               color: whiteColor,
@@ -254,8 +256,9 @@ class _LoginState extends State<SignUp> {
         setState(() {
           loading = true;
         });
+        print(value.countryCode + int.parse(value.phone).toString());
         await _auth.verifyPhoneNumber(
-          phoneNumber: '+20' + int.parse(value.phone).toString(),
+          phoneNumber: value.countryCode + int.parse(value.phone).toString(),
           verificationCompleted: (phoneAuthCredential) async {
             setState(() {
               loading = false;
@@ -293,8 +296,8 @@ class _LoginState extends State<SignUp> {
     }
   }
 
-  void signInWithPhoneAuthCredential(
-      PhoneAuthCredential phoneAuthCredential,RegisterProvider registerProvider) async {
+  void signInWithPhoneAuthCredential(PhoneAuthCredential phoneAuthCredential,
+      RegisterProvider registerProvider) async {
     setState(() {
       loading = true;
     });
@@ -310,9 +313,9 @@ class _LoginState extends State<SignUp> {
       if (authCredential.user != null) {
         authApi
             .getSignupResponse(
-                name: registerProvider.FName+" "+registerProvider.LName,
-                emailOrPhone:
-                    '+20' + int.parse(registerProvider.phone).toString(),
+                name: registerProvider.FName + " " + registerProvider.LName,
+                emailOrPhone: registerProvider.countryCode +
+                    int.parse(registerProvider.phone).toString(),
                 password: registerProvider.password,
                 passwordConfirmation: registerProvider.password,
                 userType: registerProvider.newAccountType)
@@ -323,14 +326,15 @@ class _LoginState extends State<SignUp> {
             FreshchatUser freshchatUser = await Freshchat.getUser;
             freshchatUser.setFirstName(loginResponse.user.name);
             freshchatUser.setPhone(
-                '+20',
+                registerProvider.countryCode,
                 loginResponse.user.phone
                     .substring(3, loginResponse.user.phone.length));
             Freshchat.setUser(freshchatUser);
             showTopSnackBar(
               context,
               CustomSnackBar.success(
-                message: getLang(context, "Welcome")+" ${loginResponse.user.name} !",
+                message: getLang(context, "Welcome") +
+                    " ${loginResponse.user.name} !",
                 backgroundColor: Colors.green,
               ),
               displayDuration: Duration(seconds: 1),
@@ -342,7 +346,7 @@ class _LoginState extends State<SignUp> {
               ),
               (Route<dynamic> route) => false,
             );
-            FirebaseMessaging().getToken().then((value) {
+            FirebaseMessaging.instance.getToken().then((value) {
               ProfileRepository().getDeviceTokenUpdateResponse(value);
             });
           } else {

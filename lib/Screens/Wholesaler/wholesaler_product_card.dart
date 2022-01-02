@@ -24,7 +24,11 @@ class WholesalerProductCard extends StatefulWidget {
 
 class _ProductCardState extends State<WholesalerProductCard> {
   bool showAddToCartIcon = true;
+
+  /// page is loading data
   bool isLoading = false;
+
+  /// delete button is loading
   bool isDeleteLoading = false;
 
   @override
@@ -34,14 +38,11 @@ class _ProductCardState extends State<WholesalerProductCard> {
 
   @override
   Widget build(BuildContext context) {
-    return
-
-      Consumer<CartProvider>(
+    return Consumer<CartProvider>(
         builder: (context, value, child) => Card(
                 child: InkWell(
               onTap: () async {
-                await Navigator.of(context)
-                    .push(
+                await Navigator.of(context).push(
                   MaterialPageRoute<void>(
                     builder: (BuildContext context) => ProductDetails(
                       id: widget.product.id,
@@ -52,26 +53,10 @@ class _ProductCardState extends State<WholesalerProductCard> {
               child: Stack(
                 children: [
                   Container(
-                    foregroundDecoration: widget.product.discount == null ||
-                            widget.product.discount != 0
-                        ? null
-                        : RotatedCornerDecoration(
-                            color: Colors.redAccent,
-                            geometry:
-                                const BadgeGeometry(width: 48, height: 48),
-                            textSpan: const TextSpan(
-                              text: '%',
-                              style: TextStyle(
-                                fontSize: 14,
-                                letterSpacing: 1,
-                                fontWeight: FontWeight.bold,
-                                shadows: [
-                                  BoxShadow(color: Colors.white, blurRadius: 4)
-                                ],
-                              ),
-                            ),
-                          ),
-                    decoration: value.productsList[widget.product.id.toString()] == null
+                    foregroundDecoration: null,
+                    decoration: value
+                                .productsList[widget.product.id.toString()] ==
+                            null
                         ? null
                         : BoxDecoration(
                             border: Border.all(width: 2, color: primaryColor),
@@ -86,8 +71,12 @@ class _ProductCardState extends State<WholesalerProductCard> {
                           Container(
                             width: 120,
                             height: 120,
-                            child: value.productsList[widget.product.id.toString()] != null
-                                ? value.productsList[widget.product.id.toString()] == 1 &&
+                            child: value.productsList[
+                                        widget.product.id.toString()] !=
+                                    null
+                                ? value.productsList[
+                                                widget.product.id.toString()] ==
+                                            1 &&
                                         showAddToCartIcon
                                     ? Lottie.asset(
                                         'assets/lottie/add_to_cart2.json',
@@ -134,37 +123,62 @@ class _ProductCardState extends State<WholesalerProductCard> {
                                         widget.product.discount == 0
                                     ? Container()
                                     : Align(
-                                        child: Text(
-                                          (widget.product.base_price)
-                                                  .toStringAsFixed(2) +
-                                              widget.product.currency_symbol,
+                                        child: widget.product.base_price == 0
+                                            ? Text(
+                                                'Price is determined upon request',
+                                                overflow: TextOverflow.clip,
+                                                textAlign: TextAlign.center,
+                                                style: TextStyle(
+                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: fontColor
+                                                        .withOpacity(0.5)),
+                                              )
+                                            : Text(
+                                                (widget.product.base_price)
+                                                        .toStringAsFixed(2) +
+                                                    widget.product
+                                                        .currency_symbol,
+                                                overflow: TextOverflow.clip,
+                                                style: TextStyle(
+                                                    decoration: TextDecoration
+                                                        .lineThrough,
+                                                    fontSize: 12,
+                                                    fontWeight: FontWeight.bold,
+                                                    color: fontColor
+                                                        .withOpacity(0.5)),
+                                              ),
+                                        alignment: Alignment.topLeft,
+                                      ),
+                                Align(
+                                  child: widget.product.base_price == 0
+                                      ? Text(
+                                          'Price is determined upon request',
                                           overflow: TextOverflow.clip,
+                                          textAlign: TextAlign.center,
                                           style: TextStyle(
-                                              decoration:
-                                                  TextDecoration.lineThrough,
                                               fontSize: 12,
                                               fontWeight: FontWeight.bold,
                                               color:
                                                   fontColor.withOpacity(0.5)),
+                                        )
+                                      : Text(
+                                          widget.product.discount != null ||
+                                                  widget.product.discount != 0
+                                              ? (widget.product.base_price -
+                                                          widget
+                                                              .product.discount)
+                                                      .toStringAsFixed(2) +
+                                                  widget.product.currency_symbol
+                                              : widget.product.base_price
+                                                      .toStringAsFixed(2) +
+                                                  widget
+                                                      .product.currency_symbol,
+                                          style: TextStyle(
+                                              fontSize: 16,
+                                              fontWeight: FontWeight.bold,
+                                              color: primaryColor),
                                         ),
-                                        alignment: Alignment.topLeft,
-                                      ),
-                                Align(
-                                  child: Text(
-                                    widget.product.discount != null ||
-                                            widget.product.discount != 0
-                                        ? (widget.product.base_price -
-                                                    widget.product.discount)
-                                                .toStringAsFixed(2) +
-                                            widget.product.currency_symbol
-                                        : widget.product.base_price
-                                                .toStringAsFixed(2) +
-                                            widget.product.currency_symbol,
-                                    style: TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold,
-                                        color: primaryColor),
-                                  ),
                                   alignment: Alignment.bottomCenter,
                                 ),
                               ],
@@ -193,18 +207,18 @@ class _ProductCardState extends State<WholesalerProductCard> {
                                                 widget.product.id.toString()] !=
                                             null) {
                                           value.updateCartLocal(
-                                            context,
+                                              context,
                                               widget.product.id,
-                                              (value.productsList[
-                                                      widget.product.id.toString()] +
+                                              (value.productsList[widget
+                                                      .product.id
+                                                      .toString()] +
                                                   1),
                                               lowerLimit: 1,
                                               upperLimit:
                                                   widget.product.current_stock);
                                         } else {
                                           value.updateCartLocal(
-                                            context,
-                                              widget.product.id, 1,
+                                              context, widget.product.id, 1,
                                               lowerLimit: 1,
                                               upperLimit:
                                                   widget.product.current_stock);
@@ -221,8 +235,9 @@ class _ProductCardState extends State<WholesalerProductCard> {
                                                     2) -
                                                 10,
                                         height: 40,
-                                        child: value.productsList[
-                                                    widget.product.id.toString()] ==
+                                        child: value.productsList[widget
+                                                    .product.id
+                                                    .toString()] ==
                                                 null
                                             ? Row(
                                                 mainAxisAlignment:
@@ -233,7 +248,8 @@ class _ProductCardState extends State<WholesalerProductCard> {
                                                     color: primaryColor,
                                                   ),
                                                   Text(
-                                                    getLang(context, 'Add to cart'),
+                                                    getLang(
+                                                        context, 'Add to cart'),
                                                     style: TextStyle(
                                                         color: primaryColor,
                                                         fontWeight:
@@ -241,8 +257,9 @@ class _ProductCardState extends State<WholesalerProductCard> {
                                                   ),
                                                 ],
                                               )
-                                            : value.productsList[
-                                                        widget.product.id.toString()] ==
+                                            : value.productsList[widget
+                                                        .product.id
+                                                        .toString()] ==
                                                     null
                                                 ? Row(
                                                     mainAxisAlignment:
@@ -254,7 +271,8 @@ class _ProductCardState extends State<WholesalerProductCard> {
                                                         color: primaryColor,
                                                       ),
                                                       Text(
-                                                        getLang(context, 'Add to cart'),
+                                                        getLang(context,
+                                                            'Add to cart'),
                                                         style: TextStyle(
                                                             color: primaryColor,
                                                             fontWeight:
@@ -274,15 +292,17 @@ class _ProductCardState extends State<WholesalerProductCard> {
                                                         onPressed: () {
                                                           if (value.productsList[
                                                                   widget.product
-                                                                      .id.toString()] !=
+                                                                      .id
+                                                                      .toString()] !=
                                                               null) {
                                                             value.updateCartLocal(
-                                                              context,
+                                                                context,
                                                                 widget
                                                                     .product.id,
                                                                 (value.productsList[widget
                                                                         .product
-                                                                        .id.toString()] -
+                                                                        .id
+                                                                        .toString()] -
                                                                     1),
                                                                 lowerLimit: 1,
                                                                 upperLimit: widget
@@ -290,7 +310,7 @@ class _ProductCardState extends State<WholesalerProductCard> {
                                                                     .current_stock);
                                                           } else {
                                                             value.updateCartLocal(
-                                                              context,
+                                                                context,
                                                                 widget
                                                                     .product.id,
                                                                 1,
@@ -305,7 +325,8 @@ class _ProductCardState extends State<WholesalerProductCard> {
                                                       Text(
                                                         value.productsList[
                                                                 widget
-                                                                    .product.id.toString()]
+                                                                    .product.id
+                                                                    .toString()]
                                                             .toString(),
                                                         style: TextStyle(
                                                             color: primaryColor,
@@ -319,21 +340,25 @@ class _ProductCardState extends State<WholesalerProductCard> {
                                                         onPressed: () {
                                                           if (value.productsList[
                                                                   widget.product
-                                                                      .id.toString()] !=
+                                                                      .id
+                                                                      .toString()] !=
                                                               null) {
-                                                            value.updateCartLocal(context,
+                                                            value.updateCartLocal(
+                                                                context,
                                                                 widget
                                                                     .product.id,
                                                                 (value.productsList[widget
                                                                         .product
-                                                                        .id.toString()] +
+                                                                        .id
+                                                                        .toString()] +
                                                                     1),
                                                                 lowerLimit: 1,
                                                                 upperLimit: widget
                                                                     .product
                                                                     .current_stock);
                                                           } else {
-                                                            value.updateCartLocal(context,
+                                                            value.updateCartLocal(
+                                                                context,
                                                                 widget
                                                                     .product.id,
                                                                 1,

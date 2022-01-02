@@ -1,3 +1,4 @@
+import 'package:country_code_picker/country_code_picker.dart';
 import 'package:denta_needs/Apis/authApi.dart';
 import 'package:denta_needs/Helper/applocal.dart';
 import 'package:denta_needs/Helper/global.dart';
@@ -14,11 +15,13 @@ class UserInfo extends StatefulWidget {
   @override
   _UserInfoState createState() => _UserInfoState();
 }
-
+/// Account Type ( DOCTOR OR STUDENT )
 enum AccountType { DOCTOR, STUDENT }
 
 class _UserInfoState extends State<UserInfo> {
   AccountType type;
+
+  String countryCode='+20';
 
   @override
   Widget build(BuildContext context) {
@@ -41,30 +44,6 @@ class _UserInfoState extends State<UserInfo> {
               SizedBox(
                 height: 10,
               ),
-
-              // Container(
-              //   color: accentColor,
-              //   padding: EdgeInsets.fromLTRB(8, 2, 8, 2),
-              //   child: Row(
-              //     children: [
-              //       Icon(
-              //         Icons.person,
-              //         color: whiteColor,
-              //       ),
-              //       SizedBox(
-              //         width: 10,
-              //       ),
-              //       Text(
-              //         getLang(context, 'user_info'),
-              //         style: TextStyle(
-              //             color: whiteColor,
-              //             fontSize: 14,
-              //             fontWeight: FontWeight.bold),
-              //       ),
-              //     ],
-              //   ),
-              // ),
-              //
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -114,8 +93,20 @@ class _UserInfoState extends State<UserInfo> {
                 keyboardType: TextInputType.phone,
                 decoration: InputDecoration(
                     border: UnderlineInputBorder(),
-                    prefix: Text(
-                      '+20 ',
+                    prefix: CountryCodePicker(
+                      onChanged: (CountryCode countryCode){
+                        value.countryCode = countryCode.dialCode;
+                        print('code'+value.countryCode);
+                      },
+                      // Initial selection
+                      initialSelection: 'EG',
+                      favorite: ['+20','EG'],
+                      // optional. Shows only country name and flag
+                      showCountryOnly: false,
+                      // optional. Shows only country name and flag when popup is closed.
+                      showOnlyCountryWhenClosed: false,
+                      // optional. aligns the flag and the Text left
+                      alignLeft: false,
                     ),
                     labelText: getLang(context, 'phone_number'),
                     hintText: getLang(context, 'enter_your_phone'),
@@ -139,98 +130,6 @@ class _UserInfoState extends State<UserInfo> {
               SizedBox(
                 height: 15,
               ),
-              // Container(
-              //   color: accentColor,
-              //   padding: EdgeInsets.fromLTRB(8, 2, 8, 2),
-              //   child: Row(
-              //     children: [
-              //       Icon(
-              //         Icons.settings,
-              //         color: whiteColor,
-              //       ),
-              //       SizedBox(
-              //         width: 10,
-              //       ),
-              //       Text(
-              //         getLang(context, 'account_type'),
-              //         style: TextStyle(
-              //             color: whiteColor,
-              //             fontSize: 14,
-              //             fontWeight: FontWeight.bold),
-              //       ),
-              //     ],
-              //   ),
-              // ),
-              // SizedBox(
-              //   height: 10,
-              // ),
-              // Row(
-              //   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              //   children: [
-              //     Column(
-              //       children: [
-              //         InkWell(
-              //           onTap: () {
-              //             value.setNewAccountType = "doctor";
-              //                type = AccountType.DOCTOR;
-              //
-              //           },
-              //           child: CircleAvatar(
-              //             radius: 35,
-              //             backgroundColor: type == AccountType.DOCTOR
-              //                 ? primaryColor
-              //                 : accentColor,
-              //             child: CircleAvatar(
-              //               radius: 32,
-              //               child: Image.asset(
-              //                 type == AccountType.DOCTOR
-              //                     ? 'assets/images/dentist-selected.png'
-              //                     : 'assets/images/dentist.png',
-              //                 width: 45,
-              //               ),
-              //               backgroundColor: type == AccountType.DOCTOR
-              //                   ? primaryColor
-              //                   : whiteColor,
-              //             ),
-              //           ),
-              //         ),
-              //         Text(getLang(context, 'doctor'))
-              //       ],
-              //     ),
-              //     Column(
-              //       children: [
-              //         InkWell(
-              //           onTap: () {
-              //             value.setNewAccountType = "student";
-              //                type = AccountType.STUDENT;
-              //           },
-              //           child: CircleAvatar(
-              //             radius: 35,
-              //             backgroundColor: type == AccountType.STUDENT
-              //                 ? primaryColor
-              //                 : accentColor,
-              //             child: CircleAvatar(
-              //               radius: 32,
-              //               child: type == AccountType.STUDENT
-              //                   ? Image.asset(
-              //                       'assets/images/graduated-selected.png',
-              //                       width: 45,
-              //                     )
-              //                   : Image.asset(
-              //                       'assets/images/graduated.png',
-              //                       width: 45,
-              //                     ),
-              //               backgroundColor: type == AccountType.STUDENT
-              //                   ? primaryColor
-              //                   : whiteColor,
-              //             ),
-              //           ),
-              //         ),
-              //         Text(getLang(context, 'student'))
-              //       ],
-              //     ),
-              //   ],
-              // ),
             ],
           ),
         ),

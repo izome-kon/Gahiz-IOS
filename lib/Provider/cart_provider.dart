@@ -21,7 +21,7 @@ class CartProvider extends ChangeNotifier {
   bool sendUpdateRequest = false;
 
   Future<void> getData() async {
-    cartList = await CartRepository().getCartResponseList(user_id.value);
+    cartList = await CartRepository().getCartResponseList(user_id.$);
     notifyListeners();
   }
 
@@ -45,7 +45,7 @@ class CartProvider extends ChangeNotifier {
     if (rowColCartId != null) {
       productsList.remove(productId.toString());
       CartDeleteResponse cdr =
-      await CartRepository().getCartDeleteResponse(rowColCartId[2]);
+          await CartRepository().getCartDeleteResponse(rowColCartId[2]);
       if (cdr.result) {
         showTopSnackBar(
           context,
@@ -120,7 +120,8 @@ class CartProvider extends ChangeNotifier {
         context,
         CustomSnackBar.info(
           backgroundColor: primaryColor,
-          message: getLang(context, 'Only') + ' $upperLimit ' +
+          message: getLang(context, 'Only') +
+              ' $upperLimit ' +
               getLang(context, 'item(s) are available'),
         ),
         displayDuration: Duration(seconds: 1),

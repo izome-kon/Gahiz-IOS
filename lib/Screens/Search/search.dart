@@ -17,12 +17,21 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
+  /// searched products from api
   ProductMiniResponse _searchedProducts;
+
+  /// Search Text from user
   String _searchText = '';
 
+  /// Get data from api
   getData() async {
-    _searchedProducts =
-        await ProductApi().getFilteredProducts(name: _searchText);
+    if (_searchText == '') {
+      _searchedProducts = await ProductApi().getBestSellingProducts();
+    } else {
+      _searchedProducts =
+          await ProductApi().getFilteredProducts(name: _searchText);
+    }
+
     setState(() {});
   }
 
@@ -31,8 +40,6 @@ class _SearchPageState extends State<SearchPage> {
     getData();
     super.initState();
   }
-
-  // entire logic is inside this listener for ListView
 
   @override
   Widget build(BuildContext context) {
@@ -126,13 +133,14 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 
+  /// Build searched product not found
   buildSearchNotFound() {
     return SliverToBoxAdapter(
         child: Column(
       children: [
         Lottie.asset('assets/lottie/search_not_found.json', repeat: false),
         Text(
-          getLang(context, 'Not Found')+' \"$_searchText\"',
+          getLang(context, 'Not Found') + ' \"$_searchText\"',
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 18,

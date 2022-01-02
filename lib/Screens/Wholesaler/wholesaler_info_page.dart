@@ -33,19 +33,30 @@ class WholesalerInfoPage extends StatefulWidget {
 }
 
 class _ProductPageState extends State<WholesalerInfoPage> {
+  /// Wholesaler products count
   var productsCount;
   ProductMiniResponse productsList;
   CategoryResponse _categoriesList;
+  /// Used to get all products
   bool allCategories = true;
 
-  //
+  /// Loaded pages
   int _shopPage = 1;
+
+  /// Total pages
   int _totalShopData = 0;
+
+  /// Loaded Products count
   int _loadedProductsCount = -1;
+
+  /// Show Loading Circle
   bool _showShopLoadingContainer = false;
   ScrollController _shopScrollController = ScrollController();
+
+  /// Selected Categories
   List<int> selectedCategoriesList = [];
 
+  /// get Data from api
   getData() async {
     productsCount =
         await ShopRepository().getProductsCount(id: widget.shop.userId);
@@ -55,9 +66,9 @@ class _ProductPageState extends State<WholesalerInfoPage> {
     setState(() {});
   }
 
+  /// Fetch Products
   fetchProductsData() async {
     if (selectedCategoriesList.length != 0) {
-      print('getShopProductsByCategories');
       var shopResponse = await ProductApi().getShopProductsByCategories(
           id: widget.shop.id,
           page: _shopPage,
@@ -76,14 +87,13 @@ class _ProductPageState extends State<WholesalerInfoPage> {
       productsList.products.addAll(shopResponse.products);
       _totalShopData = shopResponse.meta.total;
     }
-    print(_totalShopData);
-    print(_loadedProductsCount);
     setState(() {});
   }
 
   @override
   void initState() {
     getData();
+    /// Add listener to check if user scroll to bottom of list view will load new page
     _shopScrollController.addListener(() {
       if (_shopScrollController.position.pixels ==
           _shopScrollController.position.maxScrollExtent) {
@@ -99,9 +109,7 @@ class _ProductPageState extends State<WholesalerInfoPage> {
 
   @override
   Widget build(BuildContext context) {
-    return
-
-      Consumer<CartProvider>(
+    return Consumer<CartProvider>(
       builder: (context, value, child) => Scaffold(
           floatingActionButton: value.productsList.keys.length == 0
               ? Container()
@@ -194,7 +202,9 @@ class _ProductPageState extends State<WholesalerInfoPage> {
                                       item_count: 1, item_height: 15.0),
                                 )
                               : Text(
-                                  getLang(context, 'num of products')+' ' + productsCount,
+                                  getLang(context, 'num of products') +
+                                      ' ' +
+                                      productsCount,
                                   style: TextStyle(
                                       color: fontColor.withOpacity(0.7),
                                       fontSize: 13),
@@ -419,6 +429,7 @@ class _ProductPageState extends State<WholesalerInfoPage> {
     );
   }
 
+  /// on page refresh
   Future<void> _onShopListRefresh() async {
     productsCount = null;
     productsList.products = [];
@@ -436,6 +447,7 @@ class _ProductPageState extends State<WholesalerInfoPage> {
     });
   }
 
+  /// build Loading ShimmerList
   buildCategoriesShimmerList(context) {
     return Container(
       width: MediaQuery.of(context).size.width / 3,

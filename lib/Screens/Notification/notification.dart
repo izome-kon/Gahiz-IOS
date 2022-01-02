@@ -21,9 +21,9 @@ class _NotificationPageState extends State<NotificationPage> {
 
   getData() async {
     notificationResponse =
-        await NotificationRepository().getNotifications(userID: user_id.value);
+        await NotificationRepository().getNotifications(userID: user_id.$);
 
-    NotificationRepository().setAsRead(userID: user_id.value);
+    NotificationRepository().setAsRead(userID: user_id.$);
     setState(() {});
   }
 

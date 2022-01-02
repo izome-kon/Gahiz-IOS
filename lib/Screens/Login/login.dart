@@ -1,4 +1,5 @@
 // import 'package:connectivity/connectivity.dart';
+import 'package:country_code_picker/country_code_picker.dart';
 import 'package:denta_needs/Apis/authApi.dart';
 import 'package:denta_needs/Apis/auth_repository.dart';
 import 'package:denta_needs/Apis/profile_repositories.dart';
@@ -33,6 +34,7 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   String phone = "";
   String password = "";
+  String countryCode = "+20";
   bool loading = false;
   final GlobalKey<ScaffoldState> _scaffoldKey = new GlobalKey<ScaffoldState>();
 
@@ -156,11 +158,28 @@ class _LoginState extends State<Login> {
                                                   context, 'phone_number'),
                                               hintText: getLang(
                                                   context, 'enter_your_phone'),
-                                              prefix: Text(
-                                                '+20 ',
-                                                style:
-                                                    TextStyle(color: fontColor),
+                                              prefix:
+                                              CountryCodePicker(
+                                                onChanged: (CountryCode countryCode){
+                                                  this.countryCode = countryCode.dialCode;
+                                                  print('code'+this.countryCode);
+                                                },
+                                                // Initial selection
+                                                initialSelection: 'EG',
+                                                favorite: ['+20','EG'],
+                                                // optional. Shows only country name and flag
+                                                showCountryOnly: false,
+                                                // optional. Shows only country name and flag when popup is closed.
+                                                showOnlyCountryWhenClosed: false,
+                                                // optional. aligns the flag and the Text left
+                                                alignLeft: false,
                                               ),
+
+                                              // Text(
+                                              //   '+20 ',
+                                              //   style:
+                                              //       TextStyle(color: fontColor),
+                                              // ),
                                               suffixIcon:
                                                   Icon(Icons.phone_android)),
                                         ),
@@ -538,13 +557,13 @@ class _LoginState extends State<Login> {
   }
 
   void onSubmitClick() {
-    print('+20' + phoneInt.toString());
+    print(countryCode + phoneInt.toString());
     if (codeConfirmed) {
       setState(() {
         loading = true;
       });
       AuthRepository()
-          .getPasswordConfirmResponse('+20' + phoneInt.toString(), password)
+          .getPasswordConfirmResponse(countryCode + phoneInt.toString(), password)
           .then((value) {
         if (value.result) {
           showTopSnackBar(

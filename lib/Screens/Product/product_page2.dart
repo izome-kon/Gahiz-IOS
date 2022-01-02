@@ -1,6 +1,9 @@
+import 'package:badges/badges.dart';
 import 'package:denta_needs/Apis/productApi.dart';
 import 'package:denta_needs/Apis/wishListRepository.dart';
 import 'package:denta_needs/Helper/applocal.dart';
+import 'package:denta_needs/Provider/cart_provider.dart';
+import 'package:denta_needs/Screens/Cart/cart.dart';
 import 'package:denta_needs/Screens/Product/product_card.dart';
 import 'package:denta_needs/Common/common_webview_screen.dart';
 import 'package:denta_needs/Common/logo.dart';
@@ -13,16 +16,20 @@ import 'package:denta_needs/Screens/Product/wholesaler_card.dart';
 import 'package:denta_needs/Utils/theme.dart';
 import 'package:denta_needs/app_config.dart';
 import 'package:expandable/expandable.dart';
+import 'package:feature_discovery/feature_discovery.dart';
 
 import 'package:flutter/material.dart';
 
 import 'package:carousel_slider/carousel_slider.dart';
+
 import 'package:flutter_icons/flutter_icons.dart';
 
 import 'dart:ui';
 
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:like_button/like_button.dart';
+import 'package:lottie/lottie.dart';
+import 'package:provider/provider.dart';
 import 'package:solid_bottom_sheet/solid_bottom_sheet.dart';
 import 'package:toast/toast.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
@@ -48,7 +55,8 @@ class _ProductDetailsState extends State<ProductDetails> {
   //init values
   bool _isInWishList = false;
   var _productDetailsFetched = false;
-  DetailedProduct _productDetails = null;
+  DetailedProduct _productDetails;
+
   var _carouselImageList = [];
   var _colorList = [];
   int _selectedColorIndex = 0;
@@ -60,7 +68,7 @@ class _ProductDetailsState extends State<ProductDetails> {
   var _singlePriceString;
   int _quantity = 1;
   int _stock = 0;
-
+  bool showBlurMenu = false;
   List<dynamic> _relatedProducts = [];
   bool _relatedProductInit = false;
   List<dynamic> _topProducts = [];
@@ -219,14 +227,8 @@ class _ProductDetailsState extends State<ProductDetails> {
         ? _colorList[_selectedColorIndex].toString().replaceAll("#", "")
         : "";
 
-    /*print("color string: "+color_string);
-    return;*/
-
     var variantResponse = await ProductApi().getVariantWiseInfo(
         id: widget.id, color: color_string, variants: _choiceString);
-
-    /*print("vr"+variantResponse.toJson().toString());
-    return;*/
 
     _singlePrice = variantResponse.price;
     _stock = variantResponse.stock;
@@ -367,338 +369,280 @@ class _ProductDetailsState extends State<ProductDetails> {
         disabledTextColor: Colors.grey,
       ),
     );
-    return Scaffold(
-      backgroundColor: Colors.white,
-      bottomSheet: InkWell(
-        onTap: () {
-          _bottomSheetController.isOpened
-              ? _bottomSheetController.hide()
-              : _bottomSheetController.show();
-        },
-        child: SolidBottomSheet(
-          draggableBody: true,
-          elevation: 3,
-          controller: _bottomSheetController,
-          maxHeight: MediaQuery.of(context).size.height - 350,
-          body: Container(
-            color: Colors.white,
-            height: MediaQuery.of(context).size.height - 160,
-            child: Center(
-              child: ListView(
-                physics: NeverScrollableScrollPhysics(),
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(
-                      16.0,
-                      0.0,
-                      16.0,
-                      0.0,
-                    ),
-                    child: Text(
-                      getLang(context, 'description'),
-                      style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(
-                      8.0,
-                      0.0,
-                      8.0,
-                      8.0,
-                    ),
-                    child: _productDetails != null
-                        ? buildExpandableDescription()
-                        : Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 8.0, vertical: 8.0),
-                            child: ShimmerHelper().buildBasicShimmer(
-                              height: 60.0,
-                            )),
-                  ),
-                  Divider(
-                    height: 1,
-                  ),
-                  InkWell(
-                    onTap: () {
-                      ToastComponent.showDialog(getLang(context, "Coming soon"), context,
-                          gravity: Toast.CENTER, duration: Toast.LENGTH_LONG);
-                    },
-                    child: Container(
-                      height: 40,
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(
-                          16.0,
-                          0.0,
-                          8.0,
-                          0.0,
-                        ),
-                        child: Row(
-                          children: [
-                            Text(
-                              getLang(context, "Video"),
-                              style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                            Spacer(),
-                            Icon(
-                              Icons.add,
-                              color: Colors.grey,
-                              size: 24,
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  Divider(
-                    height: 1,
-                  ),
-                  InkWell(
-                    onTap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) {
-                        return ProductReviews(id: widget.id);
-                      })).then((value) {
-                        onPopped(value);
-                      });
-                    },
-                    child: Container(
-                      height: 40,
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(
-                          16.0,
-                          0.0,
-                          8.0,
-                          0.0,
-                        ),
-                        child: Row(
-                          children: [
-                            Text(
-                              getLang(context, "Reviews"),
-                              style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                            Spacer(),
-                            Icon(
-                              Icons.add,
-                              color: Colors.grey,
-                              size: 24,
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  Divider(
-                    height: 1,
-                  ),
-                  // InkWell(
-                  //   onTap: () {
-                  //     Navigator.push(context,
-                  //         MaterialPageRoute(builder: (context) {
-                  //       return CommonWebviewScreen(
-                  //         url:
-                  //             "${AppConfig.RAW_BASE_URL}/mobile-page/sellerpolicy",
-                  //         page_name: "Seller Policy",
-                  //       );
-                  //     }));
-                  //   },
-                  //   child: Container(
-                  //     height: 40,
-                  //     child: Padding(
-                  //       padding: const EdgeInsets.fromLTRB(
-                  //         16.0,
-                  //         0.0,
-                  //         8.0,
-                  //         0.0,
-                  //       ),
-                  //       child: Row(
-                  //         children: [
-                  //           Text(
-                  //             "Seller Policy",
-                  //             style: TextStyle(
-                  //                 color: Colors.grey,
-                  //                 fontSize: 14,
-                  //                 fontWeight: FontWeight.w600),
-                  //           ),
-                  //           Spacer(),
-                  //           Icon(
-                  //             Icons.add,
-                  //             color: Colors.grey,
-                  //             size: 24,
-                  //           )
-                  //         ],
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
-                  // Divider(
-                  //   height: 1,
-                  // ),
-                  // InkWell(
-                  //   onTap: () {
-                  //     Navigator.push(context,
-                  //         MaterialPageRoute(builder: (context) {
-                  //       return CommonWebviewScreen(
-                  //         url:
-                  //             "${AppConfig.RAW_BASE_URL}/mobile-page/returnpolicy",
-                  //         page_name: "Return Policy",
-                  //       );
-                  //     }));
-                  //   },
-                  //   child: Container(
-                  //     height: 40,
-                  //     child: Padding(
-                  //       padding: const EdgeInsets.fromLTRB(
-                  //         16.0,
-                  //         0.0,
-                  //         8.0,
-                  //         0.0,
-                  //       ),
-                  //       child: Row(
-                  //         children: [
-                  //           Text(
-                  //             "Return Policy",
-                  //             style: TextStyle(
-                  //                 color: Colors.grey,
-                  //                 fontSize: 14,
-                  //                 fontWeight: FontWeight.w600),
-                  //           ),
-                  //           Spacer(),
-                  //           Icon(
-                  //             Icons.add,
-                  //             color: Colors.grey,
-                  //             size: 24,
-                  //           )
-                  //         ],
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
-                  // Divider(
-                  //   height: 1,
-                  // ),
-                  // InkWell(
-                  //   onTap: () {
-                  //     Navigator.push(context,
-                  //         MaterialPageRoute(builder: (context) {
-                  //       return CommonWebviewScreen(
-                  //         url:
-                  //             "${AppConfig.RAW_BASE_URL}/mobile-page/supportpolicy",
-                  //         page_name: "Support Policy",
-                  //       );
-                  //     }));
-                  //   },
-                  //   child: Container(
-                  //     height: 40,
-                  //     child: Padding(
-                  //       padding: const EdgeInsets.fromLTRB(
-                  //         16.0,
-                  //         0.0,
-                  //         8.0,
-                  //         0.0,
-                  //       ),
-                  //       child: Row(
-                  //         children: [
-                  //           Text(
-                  //             "Support Policy",
-                  //             style: TextStyle(
-                  //                 color: Colors.grey,
-                  //                 fontSize: 14,
-                  //                 fontWeight: FontWeight.w600),
-                  //           ),
-                  //           Spacer(),
-                  //           Icon(
-                  //             Icons.add,
-                  //             color: Colors.grey,
-                  //             size: 24,
-                  //           )
-                  //         ],
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
-                  // Divider(
-                  //   height: 1,
-                  // ),
-                ],
-              ),
-            ),
-          ),
-          headerBar: Container(
-              decoration: BoxDecoration(
-                  color: accentColor,
-                  borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(12),
-                      topRight: Radius.circular(12))),
-              constraints: BoxConstraints.expand(height: 40),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(
-                    Icons.info_outline,
-                    color: whiteColor,
-                  ),
-                  SizedBox(
-                    width: 10,
-                  ),
-                  Text(
-                    getLang(context, "More Info"),
-                    style: TextStyle(color: whiteColor),
-                  )
-                ],
-              )),
-          autoSwiped: true,
-        ),
-      ),
-      body: RefreshIndicator(
-        color: accentColor,
+    return Consumer<CartProvider>(builder: (context, value, child) {
+      return Scaffold(
         backgroundColor: Colors.white,
-        onRefresh: _onPageRefresh,
-        child: CustomScrollView(
-          controller: _mainScrollController,
-          physics: const BouncingScrollPhysics(
-              parent: AlwaysScrollableScrollPhysics()),
-          slivers: <Widget>[
-            SliverAppBar(
-              backgroundColor: whiteColor,
-              floating: true,
-              pinned: true,
-              automaticallyImplyLeading: false,
-              leading: IconButton(
-                color: primaryColor,
-                icon: Icon(Icons.arrow_back_ios),
-                tooltip: 'Back',
-                onPressed: () {
-                  Navigator.pop(context);
-                },
+        floatingActionButton: value.productsList.values.length == 0
+            ? null
+            : Badge(
+                borderRadius: BorderRadius.circular(8),
+                badgeContent: Consumer<CartProvider>(
+                  builder: (context, value, child) {
+                    return Text(
+                      value.productsList.values.length.toString(),
+                      style: TextStyle(color: whiteColor),
+                    );
+                  },
+                ),
+                alignment: Alignment.topRight,
+                child: FloatingActionButton(
+                  tooltip: 'Cart',
+                  backgroundColor: primaryColor,
+                  onPressed: onCartPress,
+                  child: showBlurMenu
+                      ? Icon(
+                          Icons.cancel_outlined,
+                          color: Colors.white,
+                        )
+                      : Lottie.asset(
+                          'assets/lottie/cart.json',
+                          fit: BoxFit.cover,
+                        ),
+                ),
               ),
-              expandedHeight: 250,
-              flexibleSpace: Container(
-                child: SafeArea(
-                  child: Padding(
-                    padding: const EdgeInsets.fromLTRB(
-                      16.0,
-                      0.0,
-                      16.0,
-                      0.0,
+        bottomSheet: InkWell(
+          onTap: () {
+            _bottomSheetController.isOpened
+                ? _bottomSheetController.hide()
+                : _bottomSheetController.show();
+          },
+          child: SolidBottomSheet(
+            draggableBody: true,
+            elevation: 3,
+            controller: _bottomSheetController,
+            maxHeight: MediaQuery.of(context).size.height - 350,
+            body: Container(
+              color: Colors.white,
+              height: MediaQuery.of(context).size.height - 160,
+              child: Center(
+                child: ListView(
+                  physics: NeverScrollableScrollPhysics(),
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(
+                        16.0,
+                        0.0,
+                        16.0,
+                        0.0,
+                      ),
+                      child: Text(
+                        getLang(context, 'description'),
+                        style: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600),
+                      ),
                     ),
-                    child: buildProductImageCarouselSlider(),
-                  ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(
+                        8.0,
+                        0.0,
+                        8.0,
+                        8.0,
+                      ),
+                      child: _productDetails != null
+                          ? buildExpandableDescription()
+                          : Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8.0, vertical: 8.0),
+                              child: ShimmerHelper().buildBasicShimmer(
+                                height: 60.0,
+                              )),
+                    ),
+                    Divider(
+                      height: 1,
+                    ),
+                    InkWell(
+                      onTap: () {
+                        ToastComponent.showDialog(
+                            getLang(context, "Coming soon"), context,
+                            gravity: Toast.CENTER, duration: Toast.LENGTH_LONG);
+                      },
+                      child: Container(
+                        height: 40,
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(
+                            16.0,
+                            0.0,
+                            8.0,
+                            0.0,
+                          ),
+                          child: Row(
+                            children: [
+                              Text(
+                                getLang(context, "Video"),
+                                style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                              Spacer(),
+                              Icon(
+                                Icons.add,
+                                color: Colors.grey,
+                                size: 24,
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    Divider(
+                      height: 1,
+                    ),
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return ProductReviews(id: widget.id);
+                        })).then((value) {
+                          onPopped(value);
+                        });
+                      },
+                      child: Container(
+                        height: 40,
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(
+                            16.0,
+                            0.0,
+                            8.0,
+                            0.0,
+                          ),
+                          child: Row(
+                            children: [
+                              Text(
+                                getLang(context, "Reviews"),
+                                style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                              Spacer(),
+                              Icon(
+                                Icons.add,
+                                color: Colors.grey,
+                                size: 24,
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    Divider(
+                      height: 1,
+                    ),
+                  ],
                 ),
               ),
             ),
+            headerBar: Container(
+                decoration: BoxDecoration(
+                    color: accentColor,
+                    borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(12),
+                        topRight: Radius.circular(12))),
+                constraints: BoxConstraints.expand(height: 40),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.info_outline,
+                      color: whiteColor,
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text(
+                      getLang(context, "More Info"),
+                      style: TextStyle(color: whiteColor),
+                    )
+                  ],
+                )),
+            autoSwiped: true,
+          ),
+        ),
+        body: RefreshIndicator(
+          color: accentColor,
+          backgroundColor: Colors.white,
+          onRefresh: _onPageRefresh,
+          child: CustomScrollView(
+            controller: _mainScrollController,
+            physics: const BouncingScrollPhysics(
+                parent: AlwaysScrollableScrollPhysics()),
+            slivers: <Widget>[
+              SliverAppBar(
+                backgroundColor: whiteColor,
+                floating: true,
+                pinned: true,
+                automaticallyImplyLeading: false,
+                leading: IconButton(
+                  color: primaryColor,
+                  icon: Icon(Icons.arrow_back_ios),
+                  tooltip: 'Back',
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                ),
+                expandedHeight: 250,
+                flexibleSpace: Container(
+                  child: SafeArea(
+                    child: Padding(
+                      padding: const EdgeInsets.fromLTRB(
+                        16.0,
+                        0.0,
+                        16.0,
+                        0.0,
+                      ),
+                      child: buildProductImageCarouselSlider(),
+                    ),
+                  ),
+                ),
+              ),
 
-            SliverList(
-                delegate: SliverChildListDelegate([
-              Padding(
+              SliverList(
+                  delegate: SliverChildListDelegate([
+                Padding(
+                    padding: const EdgeInsets.fromLTRB(
+                      16.0,
+                      8.0,
+                      16.0,
+                      0.0,
+                    ),
+                    child: _productDetails != null
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Flexible(
+                                child: Text(
+                                  _productDetails.name,
+                                  style: TextStyle(
+                                      fontSize: 18,
+                                      color: primaryColor,
+                                      fontWeight: FontWeight.w600),
+                                  maxLines: 2,
+                                ),
+                              ),
+                              Container(
+                                margin: EdgeInsets.fromLTRB(5, 5, 0, 0),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(5),
+                                    color: Colors.orange.withOpacity(0.2)),
+                                padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
+                                child: Text(
+                                  '1 ' + _productDetails.unit,
+                                  style: TextStyle(
+                                      fontSize: 12, color: Colors.deepOrange),
+                                ),
+                              ),
+                            ],
+                          )
+                        : ShimmerHelper().buildBasicShimmer(
+                            height: 30.0,
+                          )),
+              ])),
+              SliverList(
+                  delegate: SliverChildListDelegate([
+                Padding(
                   padding: const EdgeInsets.fromLTRB(
                     16.0,
                     8.0,
@@ -706,452 +650,132 @@ class _ProductDetailsState extends State<ProductDetails> {
                     0.0,
                   ),
                   child: _productDetails != null
-                      ? Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Flexible(
-                              child: Text(
-                                _productDetails.name,
-                                style: TextStyle(
-                                    fontSize: 18,
-                                    color: primaryColor,
-                                    fontWeight: FontWeight.w600),
-                                maxLines: 2,
-                              ),
-                            ),
-                            Container(
-                              margin: EdgeInsets.fromLTRB(5, 5, 0, 0),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(5),
-                                  color: Colors.orange.withOpacity(0.2)),
-                              padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
-                              child: Text(
-                                '1 ' + _productDetails.unit,
-                                style: TextStyle(
-                                    fontSize: 12, color: Colors.deepOrange),
-                              ),
-                            ),
-                          ],
-                        )
+                      ? buildRatingAndWishButtonRow()
                       : ShimmerHelper().buildBasicShimmer(
                           height: 30.0,
-                        )),
-            ])),
-            SliverList(
-                delegate: SliverChildListDelegate([
-              Padding(
-                padding: const EdgeInsets.fromLTRB(
-                  16.0,
-                  8.0,
-                  16.0,
-                  0.0,
+                        ),
                 ),
-                child: _productDetails != null
-                    ? buildRatingAndWishButtonRow()
-                    : ShimmerHelper().buildBasicShimmer(
-                        height: 30.0,
-                      ),
-              ),
-              Divider(
-                height: 24.0,
-              ),
-            ])),
-            // SliverList(
-            //     delegate: SliverChildListDelegate([
-            //   Padding(
-            //     padding: const EdgeInsets.fromLTRB(
-            //       16.0,
-            //       8.0,
-            //       16.0,
-            //       0.0,
-            //     ),
-            //     child: _productDetails != null
-            //         ? buildMainPriceRow()
-            //         : ShimmerHelper().buildBasicShimmer(
-            //             height: 30.0,
-            //           ),
-            //   ),
-            // ])),
+                Divider(
+                  height: 24.0,
+                ),
+              ])),
+              // SliverList(
+              //     delegate: SliverChildListDelegate([
+              //   Padding(
+              //     padding: const EdgeInsets.fromLTRB(
+              //       16.0,
+              //       8.0,
+              //       16.0,
+              //       0.0,
+              //     ),
+              //     child: _productDetails != null
+              //         ? buildMainPriceRow()
+              //         : ShimmerHelper().buildBasicShimmer(
+              //             height: 30.0,
+              //           ),
+              //   ),
+              // ])),
 
-            // SliverList(
-            //     delegate: SliverChildListDelegate([
-            //   // AddonConfig.club_point_addon_installed
-            //   //     ? Padding(
-            //   //         padding: const EdgeInsets.fromLTRB(
-            //   //           16.0,
-            //   //           8.0,
-            //   //           16.0,
-            //   //           0.0,
-            //   //         ),
-            //   //         child: _productDetails != null
-            //   //             ? buildClubPointRow()
-            //   //             : ShimmerHelper().buildBasicShimmer(
-            //   //                 height: 30.0,
-            //   //               ),
-            //   //       )
-            //   //     : Container(),
-            //   // Divider(
-            //   //   height: 24.0,
-            //   // ),
-            // ])),
+              // SliverList(
+              //     delegate: SliverChildListDelegate([
+              //   // AddonConfig.club_point_addon_installed
+              //   //     ? Padding(
+              //   //         padding: const EdgeInsets.fromLTRB(
+              //   //           16.0,
+              //   //           8.0,
+              //   //           16.0,
+              //   //           0.0,
+              //   //         ),
+              //   //         child: _productDetails != null
+              //   //             ? buildClubPointRow()
+              //   //             : ShimmerHelper().buildBasicShimmer(
+              //   //                 height: 30.0,
+              //   //               ),
+              //   //       )
+              //   //     : Container(),
+              //   // Divider(
+              //   //   height: 24.0,
+              //   // ),
+              // ])),
 
-            SliverList(
-                delegate: SliverChildListDelegate([
-              _productDetails != null
-                  ? buildChoiceOptionList()
-                  : buildVariantShimmers(),
-            ])),
-            SliverToBoxAdapter(
-              child: Padding(
-                padding: const EdgeInsets.fromLTRB(
-                  16.0,
-                  16.0,
-                  16.0,
-                  0.0,
+              SliverList(
+                  delegate: SliverChildListDelegate([
+                _productDetails != null
+                    ? buildChoiceOptionList()
+                    : buildVariantShimmers(),
+              ])),
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.fromLTRB(
+                    16.0,
+                    16.0,
+                    16.0,
+                    0.0,
+                  ),
+                  child: _productDetails != null
+                      ? (_colorList.length > 0 ? buildColorRow() : Container())
+                      : ShimmerHelper().buildBasicShimmer(
+                          height: 30.0,
+                        ),
                 ),
-                child: _productDetails != null
-                    ? (_colorList.length > 0 ? buildColorRow() : Container())
-                    : ShimmerHelper().buildBasicShimmer(
-                        height: 30.0,
-                      ),
               ),
-            ),
-            // SliverList(
-            //     delegate: SliverChildListDelegate([
-            //   Padding(
-            //     padding: const EdgeInsets.fromLTRB(
-            //       16.0,
-            //       8.0,
-            //       16.0,
-            //       0.0,
-            //     ),
-            //     child: _productDetails != null
-            //         ? buildQuantityRow()
-            //         : ShimmerHelper().buildBasicShimmer(
-            //             height: 30.0,
-            //           ),
-            //   ),
-            // ])),
-            // SliverList(
-            //     delegate: SliverChildListDelegate([
-            //   Padding(
-            //     padding: const EdgeInsets.fromLTRB(
-            //       16.0,
-            //       16.0,
-            //       16.0,
-            //       0.0,
-            //     ),
-            //     child: _productDetails != null
-            //         ? buildTotalPriceRow()
-            //         : ShimmerHelper().buildBasicShimmer(
-            //             height: 30.0,
-            //           ),
-            //   ),
-            //   Divider(
-            //     height: 24.0,
-            //   ),
-            // ])),
+              // SliverList(
+              //     delegate: SliverChildListDelegate([
+              //   Padding(
+              //     padding: const EdgeInsets.fromLTRB(
+              //       16.0,
+              //       8.0,
+              //       16.0,
+              //       0.0,
+              //     ),
+              //     child: _productDetails != null
+              //         ? buildQuantityRow()
+              //         : ShimmerHelper().buildBasicShimmer(
+              //             height: 30.0,
+              //           ),
+              //   ),
+              // ])),
+              // SliverList(
+              //     delegate: SliverChildListDelegate([
+              //   Padding(
+              //     padding: const EdgeInsets.fromLTRB(
+              //       16.0,
+              //       16.0,
+              //       16.0,
+              //       0.0,
+              //     ),
+              //     child: _productDetails != null
+              //         ? buildTotalPriceRow()
+              //         : ShimmerHelper().buildBasicShimmer(
+              //             height: 30.0,
+              //           ),
+              //   ),
+              //   Divider(
+              //     height: 24.0,
+              //   ),
+              // ])),
 
-            // SliverList(
-            //     delegate: SliverChildListDelegate([
-            //   Padding(
-            //     padding: const EdgeInsets.fromLTRB(
-            //       16.0,
-            //       0.0,
-            //       16.0,
-            //       0.0,
-            //     ),
-            //     child: _productDetails != null
-            //         ? buildSellerRow(context)
-            //         : ShimmerHelper().buildBasicShimmer(
-            //             height: 50.0,
-            //           ),
-            //   ),
-            //   Divider(
-            //     height: 24,
-            //   ),
-            // ])),
-            SliverList(
-                delegate: SliverChildListDelegate([
-              Padding(
-                padding: const EdgeInsets.fromLTRB(
-                  16.0,
-                  0,
-                  16.0,
-                  0.0,
-                ),
-                child: Text(
-                  getLang(context, 'wholesaler') + " ( 1 )",
-                  style: TextStyle(
-                      color: Colors.grey,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w600),
-                ),
-              ),
-              _productDetails == null
-                  ? ShimmerHelper().buildListShimmer(item_count: 1)
-                  : WholesalerCard(
-                      name: _productDetails.shop_name,
-                      upperLimit: _productDetails.current_stock,
-                      productName: _productDetails.name,
-                      productId: _productDetails.id,
-                      price: _productDetails.calculable_price,
-                      discountedPrice: _productDetails.calculable_price -
-                          _productDetails.discount,
-                      currencySymbol: _productDetails.currency_symbol,
-                      logo: _productDetails.shop_logo,
-                    ),
-            ])),
-            SliverToBoxAdapter(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(
-                      16.0,
-                      0.0,
-                      16.0,
-                      0.0,
-                    ),
-                    child: Text(
-                      getLang(context, 'description'),
-                      style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w600),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.fromLTRB(
-                      8.0,
-                      0.0,
-                      8.0,
-                      8.0,
-                    ),
-                    child: _productDetails != null
-                        ? buildExpandableDescription()
-                        : Padding(
-                            padding: const EdgeInsets.symmetric(
-                                horizontal: 8.0, vertical: 8.0),
-                            child: ShimmerHelper().buildBasicShimmer(
-                              height: 60.0,
-                            )),
-                  ),
-                  Divider(
-                    height: 1,
-                  ),
-                  InkWell(
-                    onTap: () {
-                      ToastComponent.showDialog(getLang(context, "Coming soon"), context,
-                          gravity: Toast.CENTER, duration: Toast.LENGTH_LONG);
-                    },
-                    child: Container(
-                      height: 40,
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(
-                          16.0,
-                          0.0,
-                          8.0,
-                          0.0,
-                        ),
-                        child: Row(
-                          children: [
-                            Text(
-                              getLang(context, "Video"),
-                              style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                            Spacer(),
-                            Icon(
-                              Icons.add,
-                              color: Colors.grey,
-                              size: 24,
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  Divider(
-                    height: 1,
-                  ),
-                  InkWell(
-                    onTap: () {
-                      Navigator.push(context,
-                          MaterialPageRoute(builder: (context) {
-                        return ProductReviews(id: widget.id);
-                      })).then((value) {
-                        onPopped(value);
-                      });
-                    },
-                    child: Container(
-                      height: 40,
-                      child: Padding(
-                        padding: const EdgeInsets.fromLTRB(
-                          16.0,
-                          0.0,
-                          8.0,
-                          0.0,
-                        ),
-                        child: Row(
-                          children: [
-                            Text(
-                              getLang(context, "Reviews"),
-                              style: TextStyle(
-                                  color: Colors.grey,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                            Spacer(),
-                            Icon(
-                              Icons.add,
-                              color: Colors.grey,
-                              size: 24,
-                            )
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                  Divider(
-                    height: 1,
-                  ),
-                  // InkWell(
-                  //   onTap: () {
-                  //     Navigator.push(context,
-                  //         MaterialPageRoute(builder: (context) {
-                  //       return CommonWebviewScreen(
-                  //         url:
-                  //             "${AppConfig.RAW_BASE_URL}/mobile-page/sellerpolicy",
-                  //         page_name: "Seller Policy",
-                  //       );
-                  //     }));
-                  //   },
-                  //   child: Container(
-                  //     height: 40,
-                  //     child: Padding(
-                  //       padding: const EdgeInsets.fromLTRB(
-                  //         16.0,
-                  //         0.0,
-                  //         8.0,
-                  //         0.0,
-                  //       ),
-                  //       child: Row(
-                  //         children: [
-                  //           Text(
-                  //             "Seller Policy",
-                  //             style: TextStyle(
-                  //                 color: Colors.grey,
-                  //                 fontSize: 14,
-                  //                 fontWeight: FontWeight.w600),
-                  //           ),
-                  //           Spacer(),
-                  //           Icon(
-                  //             Icons.add,
-                  //             color: Colors.grey,
-                  //             size: 24,
-                  //           )
-                  //         ],
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
-                  // Divider(
-                  //   height: 1,
-                  // ),
-                  // InkWell(
-                  //   onTap: () {
-                  //     Navigator.push(context,
-                  //         MaterialPageRoute(builder: (context) {
-                  //       return CommonWebviewScreen(
-                  //         url:
-                  //             "${AppConfig.RAW_BASE_URL}/mobile-page/returnpolicy",
-                  //         page_name: "Return Policy",
-                  //       );
-                  //     }));
-                  //   },
-                  //   child: Container(
-                  //     height: 40,
-                  //     child: Padding(
-                  //       padding: const EdgeInsets.fromLTRB(
-                  //         16.0,
-                  //         0.0,
-                  //         8.0,
-                  //         0.0,
-                  //       ),
-                  //       child: Row(
-                  //         children: [
-                  //           Text(
-                  //             "Return Policy",
-                  //             style: TextStyle(
-                  //                 color: Colors.grey,
-                  //                 fontSize: 14,
-                  //                 fontWeight: FontWeight.w600),
-                  //           ),
-                  //           Spacer(),
-                  //           Icon(
-                  //             Icons.add,
-                  //             color: Colors.grey,
-                  //             size: 24,
-                  //           )
-                  //         ],
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
-                  // Divider(
-                  //   height: 1,
-                  // ),
-                  // InkWell(
-                  //   onTap: () {
-                  //     Navigator.push(context,
-                  //         MaterialPageRoute(builder: (context) {
-                  //       return CommonWebviewScreen(
-                  //         url:
-                  //             "${AppConfig.RAW_BASE_URL}/mobile-page/supportpolicy",
-                  //         page_name: "Support Policy",
-                  //       );
-                  //     }));
-                  //   },
-                  //   child: Container(
-                  //     height: 40,
-                  //     child: Padding(
-                  //       padding: const EdgeInsets.fromLTRB(
-                  //         16.0,
-                  //         0.0,
-                  //         8.0,
-                  //         0.0,
-                  //       ),
-                  //       child: Row(
-                  //         children: [
-                  //           Text(
-                  //             "Support Policy",
-                  //             style: TextStyle(
-                  //                 color: Colors.grey,
-                  //                 fontSize: 14,
-                  //                 fontWeight: FontWeight.w600),
-                  //           ),
-                  //           Spacer(),
-                  //           Icon(
-                  //             Icons.add,
-                  //             color: Colors.grey,
-                  //             size: 24,
-                  //           )
-                  //         ],
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
-                  // Divider(
-                  //   height: 1,
-                  // ),
-                ],
-              ),
-            ),
-            SliverList(
-              delegate: SliverChildListDelegate([
+              // SliverList(
+              //     delegate: SliverChildListDelegate([
+              //   Padding(
+              //     padding: const EdgeInsets.fromLTRB(
+              //       16.0,
+              //       0.0,
+              //       16.0,
+              //       0.0,
+              //     ),
+              //     child: _productDetails != null
+              //         ? buildSellerRow(context)
+              //         : ShimmerHelper().buildBasicShimmer(
+              //             height: 50.0,
+              //           ),
+              //   ),
+              //   Divider(
+              //     height: 24,
+              //   ),
+              // ])),
+              SliverList(
+                  delegate: SliverChildListDelegate([
                 Padding(
                   padding: const EdgeInsets.fromLTRB(
                     16.0,
@@ -1160,34 +784,315 @@ class _ProductDetailsState extends State<ProductDetails> {
                     0.0,
                   ),
                   child: Text(
-                    getLang(context, "Products you may also like"),
+                    getLang(context, 'wholesaler') + " ( 1 )",
                     style: TextStyle(
                         color: Colors.grey,
-                        fontSize: 16,
+                        fontSize: 14,
                         fontWeight: FontWeight.w600),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(
-                    8.0,
-                    16.0,
-                    0.0,
-                    0.0,
-                  ),
-                  child: buildProductsMayLikeList(),
-                )
-              ]),
-            ),
-
-            SliverToBoxAdapter(
-              child: SizedBox(
-                height: 100,
+                _productDetails == null
+                    ? ShimmerHelper().buildListShimmer(item_count: 1)
+                    : WholesalerCard(
+                        name: _productDetails.shop_name,
+                        upperLimit: _productDetails.current_stock,
+                        productName: _productDetails.name,
+                        productId: _productDetails.id,
+                        price: _productDetails.calculable_price,
+                        discountedPrice: _productDetails.calculable_price -
+                            _productDetails.discount,
+                        currencySymbol: _productDetails.currency_symbol,
+                        logo: _productDetails.shop_logo,
+                      ),
+              ])),
+              SliverToBoxAdapter(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(
+                        16.0,
+                        0.0,
+                        16.0,
+                        0.0,
+                      ),
+                      child: Text(
+                        getLang(context, 'description'),
+                        style: TextStyle(
+                            color: Colors.grey,
+                            fontSize: 14,
+                            fontWeight: FontWeight.w600),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(
+                        8.0,
+                        0.0,
+                        8.0,
+                        8.0,
+                      ),
+                      child: _productDetails != null
+                          ? buildExpandableDescription()
+                          : Padding(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8.0, vertical: 8.0),
+                              child: ShimmerHelper().buildBasicShimmer(
+                                height: 60.0,
+                              )),
+                    ),
+                    Divider(
+                      height: 1,
+                    ),
+                    InkWell(
+                      onTap: () {
+                        ToastComponent.showDialog(
+                            getLang(context, "Coming soon"), context,
+                            gravity: Toast.CENTER, duration: Toast.LENGTH_LONG);
+                      },
+                      child: Container(
+                        height: 40,
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(
+                            16.0,
+                            0.0,
+                            8.0,
+                            0.0,
+                          ),
+                          child: Row(
+                            children: [
+                              Text(
+                                getLang(context, "Video"),
+                                style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                              Spacer(),
+                              Icon(
+                                Icons.add,
+                                color: Colors.grey,
+                                size: 24,
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    Divider(
+                      height: 1,
+                    ),
+                    InkWell(
+                      onTap: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return ProductReviews(id: widget.id);
+                        })).then((value) {
+                          onPopped(value);
+                        });
+                      },
+                      child: Container(
+                        height: 40,
+                        child: Padding(
+                          padding: const EdgeInsets.fromLTRB(
+                            16.0,
+                            0.0,
+                            8.0,
+                            0.0,
+                          ),
+                          child: Row(
+                            children: [
+                              Text(
+                                getLang(context, "Reviews"),
+                                style: TextStyle(
+                                    color: Colors.grey,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.w600),
+                              ),
+                              Spacer(),
+                              Icon(
+                                Icons.add,
+                                color: Colors.grey,
+                                size: 24,
+                              )
+                            ],
+                          ),
+                        ),
+                      ),
+                    ),
+                    Divider(
+                      height: 1,
+                    ),
+                    // InkWell(
+                    //   onTap: () {
+                    //     Navigator.push(context,
+                    //         MaterialPageRoute(builder: (context) {
+                    //       return CommonWebviewScreen(
+                    //         url:
+                    //             "${AppConfig.RAW_BASE_URL}/mobile-page/sellerpolicy",
+                    //         page_name: "Seller Policy",
+                    //       );
+                    //     }));
+                    //   },
+                    //   child: Container(
+                    //     height: 40,
+                    //     child: Padding(
+                    //       padding: const EdgeInsets.fromLTRB(
+                    //         16.0,
+                    //         0.0,
+                    //         8.0,
+                    //         0.0,
+                    //       ),
+                    //       child: Row(
+                    //         children: [
+                    //           Text(
+                    //             "Seller Policy",
+                    //             style: TextStyle(
+                    //                 color: Colors.grey,
+                    //                 fontSize: 14,
+                    //                 fontWeight: FontWeight.w600),
+                    //           ),
+                    //           Spacer(),
+                    //           Icon(
+                    //             Icons.add,
+                    //             color: Colors.grey,
+                    //             size: 24,
+                    //           )
+                    //         ],
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
+                    // Divider(
+                    //   height: 1,
+                    // ),
+                    // InkWell(
+                    //   onTap: () {
+                    //     Navigator.push(context,
+                    //         MaterialPageRoute(builder: (context) {
+                    //       return CommonWebviewScreen(
+                    //         url:
+                    //             "${AppConfig.RAW_BASE_URL}/mobile-page/returnpolicy",
+                    //         page_name: "Return Policy",
+                    //       );
+                    //     }));
+                    //   },
+                    //   child: Container(
+                    //     height: 40,
+                    //     child: Padding(
+                    //       padding: const EdgeInsets.fromLTRB(
+                    //         16.0,
+                    //         0.0,
+                    //         8.0,
+                    //         0.0,
+                    //       ),
+                    //       child: Row(
+                    //         children: [
+                    //           Text(
+                    //             "Return Policy",
+                    //             style: TextStyle(
+                    //                 color: Colors.grey,
+                    //                 fontSize: 14,
+                    //                 fontWeight: FontWeight.w600),
+                    //           ),
+                    //           Spacer(),
+                    //           Icon(
+                    //             Icons.add,
+                    //             color: Colors.grey,
+                    //             size: 24,
+                    //           )
+                    //         ],
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
+                    // Divider(
+                    //   height: 1,
+                    // ),
+                    // InkWell(
+                    //   onTap: () {
+                    //     Navigator.push(context,
+                    //         MaterialPageRoute(builder: (context) {
+                    //       return CommonWebviewScreen(
+                    //         url:
+                    //             "${AppConfig.RAW_BASE_URL}/mobile-page/supportpolicy",
+                    //         page_name: "Support Policy",
+                    //       );
+                    //     }));
+                    //   },
+                    //   child: Container(
+                    //     height: 40,
+                    //     child: Padding(
+                    //       padding: const EdgeInsets.fromLTRB(
+                    //         16.0,
+                    //         0.0,
+                    //         8.0,
+                    //         0.0,
+                    //       ),
+                    //       child: Row(
+                    //         children: [
+                    //           Text(
+                    //             "Support Policy",
+                    //             style: TextStyle(
+                    //                 color: Colors.grey,
+                    //                 fontSize: 14,
+                    //                 fontWeight: FontWeight.w600),
+                    //           ),
+                    //           Spacer(),
+                    //           Icon(
+                    //             Icons.add,
+                    //             color: Colors.grey,
+                    //             size: 24,
+                    //           )
+                    //         ],
+                    //       ),
+                    //     ),
+                    //   ),
+                    // ),
+                    // Divider(
+                    //   height: 1,
+                    // ),
+                  ],
+                ),
               ),
-            ),
-          ],
+              SliverList(
+                delegate: SliverChildListDelegate([
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(
+                      16.0,
+                      0,
+                      16.0,
+                      0.0,
+                    ),
+                    child: Text(
+                      getLang(context, "Products you may also like"),
+                      style: TextStyle(
+                          color: Colors.grey,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.fromLTRB(
+                      8.0,
+                      16.0,
+                      0.0,
+                      0.0,
+                    ),
+                    child: buildProductsMayLikeList(),
+                  )
+                ]),
+              ),
+
+              SliverToBoxAdapter(
+                child: SizedBox(
+                  height: 100,
+                ),
+              ),
+            ],
+          ),
         ),
-      ),
-    );
+      );
+    });
   }
 
   Row buildSellerRow(BuildContext context) {
@@ -1693,61 +1598,6 @@ class _ProductDetailsState extends State<ProductDetails> {
     );
   }
 
-  buildBottomAppBar(BuildContext context, _addedToCartSnackbar) {
-    return Builder(builder: (BuildContext context) {
-      return BottomAppBar(
-        child: Container(
-          color: Colors.transparent,
-          height: 50,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              FlatButton(
-                minWidth: MediaQuery.of(context).size.width / 2 - .5,
-                height: 50,
-                color: primaryColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(0.0),
-                ),
-                child: Text(
-                  "Add to Cart",
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600),
-                ),
-                onPressed: () {
-                  onPressAddToCart(context, _addedToCartSnackbar);
-                },
-              ),
-              SizedBox(
-                width: 1,
-              ),
-              FlatButton(
-                minWidth: MediaQuery.of(context).size.width / 2 - .5,
-                height: 50,
-                color: accentColor,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(0.0),
-                ),
-                child: Text(
-                  "Buy Now",
-                  style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600),
-                ),
-                onPressed: () {
-                  onPressBuyNow(context);
-                },
-              )
-            ],
-          ),
-        ),
-      );
-    });
-  }
-
   buildRatingAndWishButtonRow() {
     return Row(
       children: [
@@ -1796,10 +1646,14 @@ class _ProductDetailsState extends State<ProductDetails> {
             collapsed: Container(
                 padding: EdgeInsets.all(8),
                 height: 50,
-                child: Text(_productDetails.description)),
+                child: Text(_productDetails.description == null
+                    ? ''
+                    : _productDetails.description)),
             expanded: Container(
                 padding: EdgeInsets.all(8),
-                child: Text(_productDetails.description)),
+                child: Text(_productDetails.description == null
+                    ? ''
+                    : _productDetails.description)),
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
@@ -2080,5 +1934,14 @@ class _ProductDetailsState extends State<ProductDetails> {
         ),
       );
     }
+  }
+
+  void onCartPress() async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute<void>(
+        builder: (BuildContext context) => CartPage(),
+      ),
+    );
   }
 }

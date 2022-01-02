@@ -10,7 +10,7 @@ import 'package:denta_needs/Helper/shared_value_helper.dart';
 import 'package:denta_needs/Provider/user_provider.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
-// import 'package:permission_handler/permission_handler.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:denta_needs/Utils/theme.dart';
 import 'package:denta_needs/app_config.dart';
 import 'package:flutter/cupertino.dart';
@@ -23,8 +23,8 @@ class EditProfile extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<EditProfile> {
-  var _nameController = TextEditingController(text: user_name.value);
-  var _phoneController = TextEditingController(text: user_phone.value);
+  var _nameController = TextEditingController(text: user_name.$);
+  var _phoneController = TextEditingController(text: user_phone.$);
   var _passwordController = TextEditingController();
   var _confirmPasswordController = TextEditingController();
 
@@ -52,11 +52,11 @@ class _ProfilePageState extends State<EditProfile> {
                 SizedBox(
                   height: 10,
                 ),
-                avatar_original.value != null
+                avatar_original.$ != null
                     ? Stack(
                         alignment: Alignment.bottomRight,
                         children: [
-                          avatar_original.value != ''
+                          avatar_original.$ != ''
                               ? CircleAvatar(
                                   radius: 70,
                                   backgroundColor: primaryColor,
@@ -71,7 +71,7 @@ class _ProfilePageState extends State<EditProfile> {
                                             'assets/images/placeholder.png',
                                         fit: BoxFit.cover,
                                         image: AppConfig.BASE_PATH +
-                                            avatar_original.value,
+                                            avatar_original.$,
                                       ),
                                     ),
                                   ),
@@ -123,9 +123,10 @@ class _ProfilePageState extends State<EditProfile> {
                       TextFormField(
                         controller: _nameController,
                         decoration: InputDecoration(
-                            border: UnderlineInputBorder(),
-                            labelText: getLang(context, 'name'),
-                            suffixIcon: Icon(Icons.person_outline)),
+                          border: UnderlineInputBorder(),
+                          labelText: getLang(context, 'name'),
+                          suffixIcon: Icon(Icons.person_outline),
+                        ),
                       ),
                       TextFormField(
                         controller: _phoneController,
@@ -176,77 +177,79 @@ class _ProfilePageState extends State<EditProfile> {
 
   //for image uploading
   File _file;
+  PickedFile _pickedImage;
 
   chooseAndUploadImage(context) async {
-    // var status = await Permission.photos.request();
+    var status = await Permission.photos.request();
 
-    // if (status.isDenied) {
-    //   // We didn't ask for permission yet.
-    //   showDialog(
-    //       context: context,
-    //       builder: (BuildContext context) => CupertinoAlertDialog(
-    //             title: Text(getLang(context, 'Photo Permission')),
-    //             content: Text(getLang(context,
-    //                 'This app needs photo to take pictures for upload user profile photo')),
-    //             actions: <Widget>[
-    //               CupertinoDialogAction(
-    //                 child: Text(getLang(context, 'Deny')),
-    //                 onPressed: () => Navigator.of(context).pop(),
-    //               ),
-    //               CupertinoDialogAction(
-    //                 child: Text(getLang(context, 'Settings')),
-    //                 onPressed: () => openAppSettings(),
-    //               ),
-    //             ],
-    //           ));
-    // } else
-    
-    //  if (status.isRestricted) {
-    //   ToastComponent.showDialog(
-    //       getLang(context,
-    //           "Go to your application settings and give photo permission"),
-    //       context,
-    //       gravity: Toast.CENTER,
-    //       duration: Toast.LENGTH_LONG);
-    // } else if (status.isGranted) {
-    //   //file = await ImagePicker.pickImage(source: ImageSource.camera);
-    //   _file = await ImagePicker.pickImage(source: ImageSource.gallery);
+    if (status.isDenied) {
+      // We didn't ask for permission yet.
+      showDialog(
+          context: context,
+          builder: (BuildContext context) => CupertinoAlertDialog(
+                title: Text(getLang(context, 'Photo Permission')),
+                content: Text(getLang(context,
+                    'This app needs photo to take pictures for upload user profile photo')),
+                actions: <Widget>[
+                  CupertinoDialogAction(
+                    child: Text(getLang(context, 'Deny')),
+                    onPressed: () => Navigator.of(context).pop(),
+                  ),
+                  CupertinoDialogAction(
+                    child: Text(getLang(context, 'Settings')),
+                    onPressed: () => openAppSettings(),
+                  ),
+                ],
+              ));
+    } else if (status.isRestricted) {
+      ToastComponent.showDialog(
+          getLang(context,
+              "Go to your application settings and give photo permission"),
+          context,
+          gravity: Toast.CENTER,
+          duration: Toast.LENGTH_LONG);
+    } else if (status.isGranted) {
+      final ImagePicker _picker = ImagePicker();
+      //file = await ImagePicker.pickImage(source: ImageSource.camera);
+      _pickedImage = await _picker.getImage(source: ImageSource.gallery);
+      _file = File(_pickedImage.path);
+      if (_file == null) {
+        ToastComponent.showDialog(
+            getLang(context, "No file is chosen"), context,
+            gravity: Toast.CENTER, duration: Toast.LENGTH_LONG);
+        return;
+      }
+      CoolAlert.show(
+          context: context,
+          barrierDismissible: false,
+          lottieAsset: 'assets/lottie/plan.json',
+          type: CoolAlertType.loading,
+          title: getLang(context, "Edit Profile.."));
 
-    //   if (_file == null) {
-    //     ToastComponent.showDialog(
-    //         getLang(context, "No file is chosen"), context,
-    //         gravity: Toast.CENTER, duration: Toast.LENGTH_LONG);
-    //     return;
-    //   }
-    //   CoolAlert.show(
-    //       context: context,
-    //       barrierDismissible: false,
-    //       lottieAsset: 'assets/lottie/plan.json',
-    //       type: CoolAlertType.loading,
-    //       title: getLang(context, "Edit Profile.."));
+      //return;
+      String base64Image = base64Encode(_file.readAsBytesSync());
+      String fileName = _file.path.split("/").last;
 
-    //   //return;
-    //   String base64Image = base64Encode(_file.readAsBytesSync());
-    //   String fileName = _file.path.split("/").last;
+      var profileImageUpdateResponse =
+          await ProfileRepository().getProfileImageUpdateResponse(
+        base64Image,
+        fileName,
+      );
+      Navigator.of(context)
+        ..pop()
+        ..pop();
+      if (profileImageUpdateResponse.result == false) {
+        ToastComponent.showDialog(profileImageUpdateResponse.message, context,
+            gravity: Toast.CENTER, duration: Toast.LENGTH_LONG);
+        return;
+      } else {
+        ToastComponent.showDialog(profileImageUpdateResponse.message, context,
+            gravity: Toast.CENTER, duration: Toast.LENGTH_LONG);
 
-    //   var profileImageUpdateResponse =
-    //       await ProfileRepository().getProfileImageUpdateResponse(
-    //     base64Image,
-    //     fileName,
-    //   );
-    //   Navigator.of(context)..pop()..pop();
-    //   if (profileImageUpdateResponse.result == false) {
-    //     ToastComponent.showDialog(profileImageUpdateResponse.message, context,
-    //         gravity: Toast.CENTER, duration: Toast.LENGTH_LONG);
-    //     return;
-    //   } else {
-    //     ToastComponent.showDialog(profileImageUpdateResponse.message, context,
-    //         gravity: Toast.CENTER, duration: Toast.LENGTH_LONG);
-
-    //     avatar_original.value = profileImageUpdateResponse.path;
-    //     setState(() {});
-    //   }
-    // }
+        avatar_original.$ = profileImageUpdateResponse.path;
+        setState(() {});
+      }
+    }
   }
 
   onPressUpdate() async {
@@ -270,18 +273,22 @@ class _ProfilePageState extends State<EditProfile> {
       return;
     }
     if (change_password && password_confirm == "") {
-      ToastComponent.showDialog(getLang(context, "Confirm your password"), context,
+      ToastComponent.showDialog(
+          getLang(context, "Confirm your password"), context,
           gravity: Toast.CENTER, duration: Toast.LENGTH_LONG);
       return;
     }
     if (change_password && password.length < 6) {
       ToastComponent.showDialog(
-          getLang(context, "Password must contain at least 6 characters"), context,
-          gravity: Toast.CENTER, duration: Toast.LENGTH_LONG);
+          getLang(context, "Password must contain at least 6 characters"),
+          context,
+          gravity: Toast.CENTER,
+          duration: Toast.LENGTH_LONG);
       return;
     }
     if (change_password && password != password_confirm) {
-      ToastComponent.showDialog(getLang(context, "Passwords do not match"), context,
+      ToastComponent.showDialog(
+          getLang(context, "Passwords do not match"), context,
           gravity: Toast.CENTER, duration: Toast.LENGTH_LONG);
       return;
     }
@@ -300,9 +307,11 @@ class _ProfilePageState extends State<EditProfile> {
     } else {
       ToastComponent.showDialog(profileUpdateResponse.message, context,
           gravity: Toast.CENTER, duration: Toast.LENGTH_LONG);
-      Navigator.of(context)..pop()..pop();
-      user_name.value = name;
-      user_phone.value = phone;
+      Navigator.of(context)
+        ..pop()
+        ..pop();
+      user_name.$ = name;
+      user_phone.$ = phone;
       setState(() {});
     }
   }

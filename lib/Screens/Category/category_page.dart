@@ -72,7 +72,7 @@ class _CategoryPageState extends State<CategoryPage> {
           ? shopResponse.products.length
           : _loadedProductsCount + shopResponse.products.length;
       productsList.products.addAll(shopResponse.products);
-      _totalShopData = shopResponse.meta.total;
+      _totalShopData = shopResponse.products.length;
     } else {
       var shopResponse = await ProductApi()
           .getCategoryProducts(id: widget.category.id, page: _shopPage);
@@ -80,7 +80,7 @@ class _CategoryPageState extends State<CategoryPage> {
           ? shopResponse.products.length + 10
           : _loadedProductsCount + shopResponse.products.length;
       productsList.products.addAll(shopResponse.products);
-      _totalShopData = shopResponse.meta.total;
+      _totalShopData = shopResponse.products.length;
     }
     print(_totalShopData);
     print(_loadedProductsCount);
@@ -114,14 +114,12 @@ class _CategoryPageState extends State<CategoryPage> {
                   child: FloatingActionButton(
                     backgroundColor: primaryColor,
                     onPressed: () async {
-
                       await Navigator.push(
                         context,
                         MaterialPageRoute<void>(
                           builder: (BuildContext context) => CartPage(),
                         ),
-                      )
-                      ;
+                      );
                     },
                     child: Lottie.asset(
                       'assets/lottie/cart.json',
@@ -176,7 +174,8 @@ class _CategoryPageState extends State<CategoryPage> {
                         ? ShimmerHelper()
                             .buildBasicShimmer(height: 10, width: 30)
                         : Text(
-                            getLang(context, 'Products Count')+': ${productsList.meta.total}',
+                            getLang(context, 'Products Count') +
+                                ': ${productsList.products.length}',
                             style: TextStyle(fontSize: 12),
                           ),
                     leading: FadeInImage.assetNetwork(
@@ -233,7 +232,7 @@ class _CategoryPageState extends State<CategoryPage> {
                                             selectedCategoriesList.length == 0
                                                 ? whiteColor
                                                 : fontColor),
-                                    label: Text(getLang(context,'ALL')),
+                                    label: Text(getLang(context, 'ALL')),
                                   )
                                 : _categoriesList == null
                                     ? buildCategoriesShimmerList(context)
@@ -318,7 +317,7 @@ class _CategoryPageState extends State<CategoryPage> {
                   ),
                 ]),
               ),
-              productsList == null
+              productsList == null || productsList.products.length == 0
                   ? SliverToBoxAdapter(
                       child: Container(
                         height: MediaQuery.of(context).size.height,

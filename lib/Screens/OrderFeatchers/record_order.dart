@@ -38,10 +38,10 @@ class _RecordOrderScreenState extends State<RecordOrderScreen> {
   bool result;
   double recordRadius = 0;
   Color buttonColor = primaryColor;
-   StopWatchTimer _stopWatchTimer = StopWatchTimer();
+  StopWatchTimer _stopWatchTimer = StopWatchTimer();
   RecordPageState pageState = RecordPageState.RECORD;
   bool isRecording;
-   AudioPlayer audioPlayer = AudioPlayer();
+  AudioPlayer audioPlayer = AudioPlayer();
   Duration duration = Duration();
   Duration position = Duration();
   String localPath = '';
@@ -142,20 +142,17 @@ class _RecordOrderScreenState extends State<RecordOrderScreen> {
                             playerState == AudioPlayerState.STOPPED ||
                                     playerState == AudioPlayerState.PAUSED
                                 ? Icons.play_arrow_outlined
-                                :
-                                 Icons.pause,
+                                : Icons.pause,
                             size: 50,
                           ),
                           onPressed: onPressPlaySound,
                           style: ElevatedButton.styleFrom(
                               shape: CircleBorder(),
-                               primary: 
-                               (playerState ==
+                              primary: (playerState ==
                                           AudioPlayerState.PAUSED ||
                                       playerState == AudioPlayerState.STOPPED)
                                   ? primaryColor
-                                  : 
-                                  accentColor),
+                                  : accentColor),
                         ),
                       ),
                     ),
@@ -164,9 +161,7 @@ class _RecordOrderScreenState extends State<RecordOrderScreen> {
                     ),
                     Padding(
                       padding: const EdgeInsets.all(50.0),
-                      child: 
-                      
-                      ProgressBar(
+                      child: ProgressBar(
                         progress: position,
                         total: duration,
                         barHeight: 10,
@@ -258,8 +253,7 @@ class _RecordOrderScreenState extends State<RecordOrderScreen> {
                               );
                             },
                           )
-                        :
-                         Text(
+                        : Text(
                             getLang(
                               context,
                               'Click the microphone button to record',
@@ -348,13 +342,13 @@ class _RecordOrderScreenState extends State<RecordOrderScreen> {
     } else {
       await audioPlayer.play(localPath, isLocal: true);
     }
-     setState(() {});
+    setState(() {});
   }
 
   onPressReset() {
     recordRadius = 0;
     buttonColor = primaryColor;
-     _stopWatchTimer = StopWatchTimer();
+    _stopWatchTimer = StopWatchTimer();
     pageState = RecordPageState.RECORD;
     isRecording = false;
     duration = Duration();
@@ -382,7 +376,7 @@ class _RecordOrderScreenState extends State<RecordOrderScreen> {
             filename: fileName,
             image: base64Image,
             description: '',
-            user_id: user_id.value,
+            user_id: user_id.$,
             owner_user_id: AppConfig.VOICE_RECORD_ID,
             order_type: 'voice record')
         .then((value) {
@@ -395,8 +389,11 @@ class _RecordOrderScreenState extends State<RecordOrderScreen> {
           ),
           displayDuration: Duration(seconds: 2),
         );
-        Provider.of<CartProvider>(context,listen: false).sendUpdateRequest=true;
-        Navigator.of(context)..pop()..pop();
+        Provider.of<CartProvider>(context, listen: false).sendUpdateRequest =
+            true;
+        Navigator.of(context)
+          ..pop()
+          ..pop();
       } else {
         Navigator.of(context)..pop();
         showTopSnackBar(

@@ -14,6 +14,7 @@ class RegisterProvider extends ChangeNotifier {
   int timeOutAfter = 30;
   String verificationId;
   String resendingToken;
+  String countryCode='+20';
 
   set setTimeOut(int setTimeOut) {
     timeOutAfter = setTimeOut;

@@ -24,7 +24,7 @@ class UserProvider extends ChangeNotifier {
 
   loadUnRead() async {
     unReadNotifications = await NotificationRepository()
-        .getUnReadNotifications(userID: user_id.value);
+        .getUnReadNotifications(userID: user_id.$);
 
     notifyListeners();
   }

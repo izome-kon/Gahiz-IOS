@@ -1,7 +1,8 @@
 import 'dart:async';
 import 'dart:io';
 
-
+import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
+import 'package:audioplayer/audioplayer.dart';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:denta_needs/Apis/cart_repository.dart';
 import 'package:denta_needs/Common/logo.dart';
@@ -19,7 +20,9 @@ import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:provider/provider.dart';
-
+import 'package:record/record.dart';
+import 'package:ripple_animation/ripple_animation.dart';
+import 'package:stop_watch_timer/stop_watch_timer.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
 
@@ -117,7 +120,7 @@ class _RecordOrderScreenState extends State<TackTextScreen> {
                     .getCartAddVoiceRecordResponse(
                         filename: null,
                         image: null,
-                        user_id: user_id.value,
+                        user_id: user_id.$,
                         description: text,
                         owner_user_id: AppConfig.TEXT_ORDER_ID,
                         order_type: 'Text')

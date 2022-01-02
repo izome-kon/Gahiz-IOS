@@ -61,26 +61,27 @@ class _WholesalerCardState extends State<WholesalerCard> {
                 color: whiteColor,
               ),
               height: 174,
-              foregroundDecoration: value.productsList[widget.productId.toString()] != null
-                  // positionInCart != null
-                  ? RotatedCornerDecoration(
-                      color: Colors.green,
-                      geometry: const BadgeGeometry(
-                          width: 70,
-                          height: 70,
-                          alignment: BadgeAlignment.topLeft),
-                      textSpan: const TextSpan(
-                        text: 'in cart',
-                        style: TextStyle(
-                          fontSize: 13,
-                          letterSpacing: 1,
-                          fontFamily: 'Almarai',
-                          fontWeight: FontWeight.bold,
-                          shadows: [BoxShadow(color: Colors.white)],
-                        ),
-                      ),
-                    )
-                  : null,
+              foregroundDecoration:
+                  value.productsList[widget.productId.toString()] != null
+                      // positionInCart != null
+                      ? RotatedCornerDecoration(
+                          color: Colors.green,
+                          geometry: const BadgeGeometry(
+                              width: 70,
+                              height: 70,
+                              alignment: BadgeAlignment.topLeft),
+                          textSpan: const TextSpan(
+                            text: 'in cart',
+                            style: TextStyle(
+                              fontSize: 13,
+                              letterSpacing: 1,
+                              fontFamily: 'Almarai',
+                              fontWeight: FontWeight.bold,
+                              shadows: [BoxShadow(color: Colors.white)],
+                            ),
+                          ),
+                        )
+                      : null,
               child:
                   // Align(
                   //   child: Text(
@@ -123,21 +124,42 @@ class _WholesalerCardState extends State<WholesalerCard> {
                                   fontWeight: FontWeight.bold, fontSize: 13),
                             ),
                             widget.price != widget.discountedPrice
-                                ? Text(
-                                    '${widget.price.toStringAsFixed(2)} ${widget.currencySymbol}',
-                                    style: TextStyle(
-                                        decoration: TextDecoration.lineThrough,
-                                        color: fontColor.withOpacity(0.5),
-                                        fontSize: 12),
-                                  )
+                                ? widget.price == 0
+                                    ? Text(
+                                        'Price is determined upon request',
+                                        overflow: TextOverflow.clip,
+                                        textAlign: TextAlign.center,
+                                        style: TextStyle(
+                                            fontSize: 12,
+                                            fontWeight: FontWeight.bold,
+                                            color: fontColor.withOpacity(0.5)),
+                                      )
+                                    : Text(
+                                        '${widget.price.toStringAsFixed(2)} ${widget.currencySymbol}',
+                                        style: TextStyle(
+                                            decoration:
+                                                TextDecoration.lineThrough,
+                                            color: fontColor.withOpacity(0.5),
+                                            fontSize: 12),
+                                      )
                                 : Container(),
-                            Text(
-                              '${widget.discountedPrice.toStringAsFixed(2)} ${widget.currencySymbol}',
-                              style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 18,
-                                  color: primaryColor),
-                            ),
+                            widget.price == 0
+                                ? Text(
+                                    'Price is determined upon request',
+                                    overflow: TextOverflow.clip,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.bold,
+                                        color: fontColor.withOpacity(0.5)),
+                                  )
+                                : Text(
+                                    '${widget.discountedPrice.toStringAsFixed(2)} ${widget.currencySymbol}',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 18,
+                                        color: primaryColor),
+                                  ),
                           ],
                         )
                       ],
@@ -153,8 +175,12 @@ class _WholesalerCardState extends State<WholesalerCard> {
                                   //     positionInCart:
                                   //         value.getPosition(widget.productId));
 
-                                  value.updateCartLocal(context,widget.productId,
-                                      value.productsList[widget.productId.toString()] - 1,
+                                  value.updateCartLocal(
+                                      context,
+                                      widget.productId,
+                                      value.productsList[
+                                              widget.productId.toString()] -
+                                          1,
                                       lowerLimit: 1,
                                       upperLimit: widget.upperLimit);
                                 },
@@ -181,7 +207,8 @@ class _WholesalerCardState extends State<WholesalerCard> {
                                   padding:
                                       const EdgeInsets.fromLTRB(8.0, 2, 8, 2),
                                   child: Text(
-                                    value.productsList[widget.productId.toString()]
+                                    value.productsList[
+                                            widget.productId.toString()]
                                         .toString(),
                                     // value.cartList[positionInCart.x]
                                     //     .cart_items[positionInCart.y].quantity
@@ -200,12 +227,20 @@ class _WholesalerCardState extends State<WholesalerCard> {
                             // setState(() {
                             //   isLoading = true;
                             // });
-                            if (value.productsList[widget.productId.toString()] != null) {
-                              value.updateCartLocal(context,widget.productId,
-                                  (value.productsList[widget.productId.toString()] + 1),
-                                  lowerLimit: 1, upperLimit: widget.upperLimit);
+                            if (value.productsList[
+                                    widget.productId.toString()] !=
+                                null) {
+                              value.updateCartLocal(
+                                  context,
+                                  widget.productId,
+                                  (value.productsList[
+                                          widget.productId.toString()] +
+                                      1),
+                                  lowerLimit: 1,
+                                  upperLimit: widget.upperLimit);
                             } else {
-                              value.updateCartLocal(context,widget.productId, 1,
+                              value.updateCartLocal(
+                                  context, widget.productId, 1,
                                   lowerLimit: 1, upperLimit: widget.upperLimit);
                             }
 
@@ -238,7 +273,9 @@ class _WholesalerCardState extends State<WholesalerCard> {
                                   Icons.add,
                                   color: primaryColor,
                                 ),
-                                value.productsList[widget.productId.toString()] == null
+                                value.productsList[
+                                            widget.productId.toString()] ==
+                                        null
                                     ? Text(
                                         getLang(context, 'Add to cart'),
                                         style: TextStyle(
@@ -280,7 +317,6 @@ class _WholesalerCardState extends State<WholesalerCard> {
                                   cancelBtnText: 'Cancel',
                                   showCancelBtn: true,
                                   confirmBtnColor: Colors.red,
-
                                   onConfirmBtnTap: () {
                                     setState(() {
                                       isLoading = true;

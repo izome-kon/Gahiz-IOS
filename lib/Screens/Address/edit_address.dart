@@ -11,6 +11,7 @@ import 'package:denta_needs/Utils/theme.dart';
 import 'package:flutter/cupertino.dart';
 
 import 'package:flutter/material.dart';
+import 'package:geocoding/geocoding.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:lottie/lottie.dart';
@@ -52,9 +53,8 @@ class _AddAddressState extends State<EditAddress> {
     super.initState();
   }
 
-  getData() {
-    Geolocator()
-        .placemarkFromCoordinates(_address.latitude, _address.longitude)
+  getData() async {
+    await placemarkFromCoordinates(_address.latitude, _address.longitude)
         .then((value) {
       if (value.length != 0) {
         addressString = value.first.name +

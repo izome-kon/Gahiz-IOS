@@ -1,10 +1,8 @@
-import 'package:denta_needs/Apis/productApi.dart';
 import 'package:denta_needs/Apis/shop_repository.dart';
 import 'package:denta_needs/Screens/Wholesaler/wholesaler_info_page.dart';
 import 'package:denta_needs/Utils/theme.dart';
 import 'package:denta_needs/app_config.dart';
 import 'package:flutter/material.dart';
-import 'package:rotated_corner_decoration/rotated_corner_decoration.dart';
 
 class WholesalerPageCard extends StatefulWidget {
   final shop;
@@ -16,6 +14,7 @@ class WholesalerPageCard extends StatefulWidget {
 }
 
 class _WholesalerCardState extends State<WholesalerPageCard> {
+  /// Wholesaler products count
   String productsCount;
 
   @override

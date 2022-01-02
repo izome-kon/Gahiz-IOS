@@ -25,7 +25,7 @@ class _ViewAddressState extends State<ViewAddress> {
 
   getData() async {
     addressResponse = await AddressRepository().getAddressList();
-    setState(() {});
+    if (this.mounted) setState(() {});
   }
 
   @override

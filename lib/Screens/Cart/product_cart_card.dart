@@ -37,7 +37,6 @@ class _ProductCartCardState extends State<ProductCartCard> {
     super.initState();
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -84,11 +83,22 @@ class _ProductCartCardState extends State<ProductCartCard> {
                     SizedBox(
                       width: 5,
                     ),
-                    Text(
-                      '${widget.cartItem.price.toStringAsFixed(2)} ${widget.cartItem.currency_symbol}',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold, color: primaryColor),
-                    ),
+                    widget.cartItem.price == 0
+                        ? Flexible(
+                            child: Text(
+                              'Price is determined when Order Confirm',
+                              style: TextStyle(
+                                  overflow: TextOverflow.fade,
+                                  fontWeight: FontWeight.bold,
+                                  color: primaryColor),
+                            ),
+                          )
+                        : Text(
+                            '${widget.cartItem.price.toStringAsFixed(2)} ${widget.cartItem.currency_symbol}',
+                            style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                color: primaryColor),
+                          ),
                   ],
                 ),
                 Spacer(),
@@ -193,7 +203,6 @@ class _ProductCartCardState extends State<ProductCartCard> {
                                                 getLang(context, 'Cancel'),
                                             showCancelBtn: true,
                                             confirmBtnColor: Colors.red,
-
                                             onConfirmBtnTap: () {
                                               setState(() {
                                                 deleteIsLoading = true;

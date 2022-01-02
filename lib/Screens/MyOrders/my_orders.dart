@@ -18,7 +18,7 @@ class _MyOrdersState extends State<MyOrders> {
   OrderMiniResponse ordersList;
 
   getData() async {
-    ordersList = await OrderRepository().getOrderList(user_id: user_id.value);
+    ordersList = await OrderRepository().getOrderList(user_id: user_id.$);
 
     setState(() {});
   }

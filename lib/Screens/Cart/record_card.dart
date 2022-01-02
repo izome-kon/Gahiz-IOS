@@ -1,5 +1,5 @@
-// import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
-// import 'package:audioplayer/audioplayer.dart';
+import 'package:audio_video_progress_bar/audio_video_progress_bar.dart';
+import 'package:audioplayer/audioplayer.dart';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cool_alert/cool_alert.dart';
 import 'package:denta_needs/Apis/cart_repository.dart';
@@ -14,7 +14,7 @@ import 'package:denta_needs/Utils/theme.dart';
 import 'package:denta_needs/app_config.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-// import 'package:ripple_animation/ripple_animation.dart';
+import 'package:ripple_animation/ripple_animation.dart';
 import 'package:toast/toast.dart';
 import 'package:top_snackbar_flutter/custom_snack_bar.dart';
 import 'package:top_snackbar_flutter/top_snack_bar.dart';
@@ -36,7 +36,7 @@ class _ProductCartCardState extends State<RecordCartCard> {
   bool result;
   double recordRadius = 0;
   Color buttonColor = primaryColor;
-  // AudioPlayerState playerState = AudioPlayerState.STOPPED;
+  AudioPlayerState playerState = AudioPlayerState.STOPPED;
   Duration duration = Duration();
   Duration position = Duration();
   PageManager _pageManager;
@@ -136,21 +136,21 @@ class _ProductCartCardState extends State<RecordCartCard> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    // ValueListenableBuilder<ProgressBarState>(
-                    //   valueListenable: _pageManager.progressNotifier,
-                    //   builder: (_, value, __) {
-                    //     return ProgressBar(
-                    //       progress: value.current,
-                    //       buffered: value.buffered,
-                    //       total: value.total,
-                    //       barHeight: 5,
-                    //       timeLabelLocation: TimeLabelLocation.sides,
-                    //       timeLabelTextStyle: TextStyle(color: fontColor),
-                    //       progressBarColor: primaryColor,
-                    //       onSeek: _pageManager.seek,
-                    //     );
-                    //   },
-                    // ),
+                    ValueListenableBuilder<ProgressBarState>(
+                      valueListenable: _pageManager.progressNotifier,
+                      builder: (_, value, __) {
+                        return ProgressBar(
+                          progress: value.current,
+                          buffered: value.buffered,
+                          total: value.total,
+                          barHeight: 5,
+                          timeLabelLocation: TimeLabelLocation.sides,
+                          timeLabelTextStyle: TextStyle(color: fontColor),
+                          progressBarColor: primaryColor,
+                          onSeek: _pageManager.seek,
+                        );
+                      },
+                    ),
                   ],
                 ),
               )

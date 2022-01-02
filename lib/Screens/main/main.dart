@@ -24,7 +24,6 @@ import 'package:badges/badges.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
-// import 'package:shake/shake.dart';
 import 'package:simple_tooltip/simple_tooltip.dart';
 
 class Main extends StatefulWidget {
@@ -33,7 +32,12 @@ class Main extends StatefulWidget {
 }
 
 class _MainState extends State<Main> with TickerProviderStateMixin {
- 
+  // ShakeDetector detector = ShakeDetector.autoStart(
+  //     shakeThresholdGravity: 1.5,
+  //     onPhoneShake: () {
+  //       print('shhhhhhh');
+  //     }
+  // );
   bool showBlurMenu = false;
   AnimationController _controller;
   Animation<double> _animation;
@@ -209,10 +213,8 @@ class _MainState extends State<Main> with TickerProviderStateMixin {
                                                   width: 70),
                                               Text(
                                                 getLang(context, 'pic Order'),
-                                                textAlign:TextAlign.center,
                                                 style: TextStyle(
                                                     fontSize: 12,
-                                                    
                                                     color: fontColor),
                                               ),
                                             ],
@@ -277,7 +279,7 @@ class _MainState extends State<Main> with TickerProviderStateMixin {
                     onLongPress: onLongPress,
                     child: FloatingActionButton(
                       backgroundColor: primaryColor,
-                      onPressed: onCartPress,
+                      onPressed: (){},
                       child: showBlurMenu
                           ? Icon(
                         Icons.cancel_outlined,
@@ -327,7 +329,7 @@ class _MainState extends State<Main> with TickerProviderStateMixin {
                       alignment: Alignment.topRight,
                       child: FloatingActionButton(
                         backgroundColor: primaryColor,
-                        onPressed: onCartPress,
+                        onPressed: (){},
                         child: showBlurMenu
                             ? Icon(
                                 Icons.cancel_outlined,

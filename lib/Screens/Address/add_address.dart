@@ -171,7 +171,7 @@ class _AddAddressState extends State<AddAddress> {
                                   ),
                                 ),
                                 TextFormField(
-                                  enabled: false,
+                                  // enabled: false,
                                   controller: TextEditingController(
                                       text: value.addressCity),
                                   validator: (v) =>
@@ -239,7 +239,10 @@ class _AddAddressState extends State<AddAddress> {
                                             displayDuration:
                                                 Duration(seconds: 1),
                                           );
-                                          Navigator.of(context)..pop()..pop();
+                                          Navigator.of(context)
+                                            ..pop()
+                                            ..pop()
+                                            ..pop();
                                         } else {
                                           //wrong
                                           setState(() {

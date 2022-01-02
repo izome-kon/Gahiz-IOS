@@ -17,7 +17,6 @@ import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:freshchat_sdk/freshchat_sdk.dart';
 import 'package:freshchat_sdk/freshchat_user.dart';
-// import 'package:package_info/package_info.dart';
 import 'package:provider/provider.dart';
 
 class Splash extends StatefulWidget {
@@ -29,57 +28,73 @@ class _SplashState extends State<Splash> {
   @override
   void initState() {
     PushNotificationService().initialise(context);
-    // cart_local.load();
-    // is_logged_in.load();
-    // is_first_login.load();
+
+    /// remove status bar from this screen ( status bar is bar contain clock and battery)
     SystemChrome.setEnabledSystemUIOverlays([SystemUiOverlay.bottom]);
     super.initState();
   }
 
   @override
   void dispose() {
-    //before going to other screen show statusbar
+    ///before going to other screen show status bar
     SystemChrome.setEnabledSystemUIOverlays(
         [SystemUiOverlay.top, SystemUiOverlay.bottom]);
     super.dispose();
   }
 
   Future<Widget> loadFromFuture() async {
+    /// load token from device
     await access_token.load().whenComplete(() async {
       await is_first_login.load();
       var userByTokenResponse = await AuthRepository().getUserByTokenResponse();
       if (userByTokenResponse.result == true) {
-        CartProvider cartProvider;
-        if (this.mounted)
-          cartProvider = Provider.of<CartProvider>(context, listen: false);
-
-        var cartLocal = SharedValueHelper.getCartList() != null
-            ? jsonDecode(SharedValueHelper.getCartList())
-            : Map<String, dynamic>();
-        print(cartLocal);
-        if (this.mounted) cartProvider.productsList = cartLocal;
-        if (cartLocal != {} && this.mounted)
-          cartProvider.sendUpdateRequest = true;
-        print('cartLocal $cartLocal');
-
-        is_logged_in.value = true;
-        is_first_login.value = false;
-        is_first_login.save();
-        user_id.value = userByTokenResponse.id;
-        user_name.value = userByTokenResponse.name;
-        user_email.value = userByTokenResponse.email;
-        user_phone.value = userByTokenResponse.phone;
-        avatar_original.value = userByTokenResponse.avatar_original;
-        FreshchatUser freshchatUser = await Freshchat.getUser;
-        freshchatUser.setFirstName(userByTokenResponse.name);
-        freshchatUser.setPhone(
-            '+20', userByTokenResponse.phone.substring(3, userByTokenResponse.phone.length));
-        Freshchat.setUser(freshchatUser);
+        loadCart();
+        updateSharedValues(userByTokenResponse);
+        setFreshChatUser(userByTokenResponse);
       }
-      // print(access_token.value);
     });
-    if (is_first_login.value) return IntroPages();
-    return is_logged_in.value ? Main() : Login();
+
+    /// if user first login will navigate to introduction screens
+    /// if token found in device will navigate to home screen
+    /// else will navigate to login screen
+    if (is_first_login.$) return IntroPages();
+    return is_logged_in.$ ? Main() : Login();
+  }
+
+  /// (If the user has products in the cart and closes the application, they will be kept locally)
+  /// Load Cart from local device
+  loadCart() {
+    CartProvider cartProvider;
+    if (this.mounted)
+      cartProvider = Provider.of<CartProvider>(context, listen: false);
+    var cartLocal = SharedValueHelper.getCartList() != null
+        ? jsonDecode(SharedValueHelper.getCartList())
+        : Map<String, dynamic>();
+    if (this.mounted) cartProvider.productsList = cartLocal;
+    if (cartLocal != {} && this.mounted) cartProvider.sendUpdateRequest = true;
+  }
+
+  /// Change values in device by values from api response
+  updateSharedValues(userByTokenResponse) {
+    is_logged_in.$ = true;
+    is_first_login.$ = false;
+    is_first_login.save();
+    user_id.$ = userByTokenResponse.id;
+    user_name.$ = userByTokenResponse.name;
+    user_email.$ = userByTokenResponse.email;
+    user_phone.$ = userByTokenResponse.phone;
+    avatar_original.$ = userByTokenResponse.avatar_original;
+  }
+
+  ///
+  setFreshChatUser(userByTokenResponse) async {
+    FreshchatUser freshchatUser = await Freshchat.getUser;
+    freshchatUser.setFirstName(userByTokenResponse.name);
+    freshchatUser.setPhone(
+        '+20',
+        userByTokenResponse.phone
+            .substring(3, userByTokenResponse.phone.length));
+    Freshchat.setUser(freshchatUser);
   }
 
   @override

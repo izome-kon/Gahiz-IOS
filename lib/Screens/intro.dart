@@ -15,12 +15,8 @@ class IntroPages extends StatefulWidget {
 }
 
 class _IntroPagesState extends State<IntroPages> {
+  /// list of pages
   var page;
-
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   Widget build(BuildContext context) {

@@ -46,9 +46,11 @@ class OrderItem {
     this.payment_status_string,
     this.delivery_status,
     this.delivery_status_string,
+    this.thumbnail_image,
   });
 
   int product_id;
+  String thumbnail_image;
   String product_name;
   String variation;
   String price;

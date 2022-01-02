@@ -18,7 +18,6 @@ class _CommonWebviewScreenState extends State<WebViewScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
   }
 

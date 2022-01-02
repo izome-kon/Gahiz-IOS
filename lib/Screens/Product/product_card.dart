@@ -1,7 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:denta_needs/Helper/applocal.dart';
 import 'package:denta_needs/Provider/cart_provider.dart';
-import 'package:denta_needs/Provider/user_provider.dart';
 import 'package:denta_needs/Responses/Product/productResponse.dart';
 import 'package:denta_needs/Screens/Product/product_page2.dart';
 import 'package:denta_needs/Utils/theme.dart';
@@ -67,27 +66,7 @@ class _ProductCardState extends State<ProductCard> {
                                         width: 2, color: primaryColor),
                                     borderRadius:
                                         BorderRadius.all(Radius.circular(5))),
-                        foregroundDecoration:
-                            (widget.product.discount != null && 0 != 0)
-                                ? RotatedCornerDecoration(
-                                    color: accentColor,
-                                    geometry: const BadgeGeometry(
-                                        width: 50, height: 50),
-                                    textSpan: TextSpan(
-                                      text: '%',
-                                      style: TextStyle(
-                                        fontSize: 14,
-                                        letterSpacing: 1,
-                                        fontWeight: FontWeight.bold,
-                                        shadows: [
-                                          BoxShadow(
-                                              color: Colors.white,
-                                              blurRadius: 4)
-                                        ],
-                                      ),
-                                    ),
-                                  )
-                                : null,
+                        foregroundDecoration: null,
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Column(
@@ -126,39 +105,71 @@ class _ProductCardState extends State<ProductCard> {
                                             widget.product.discount == 0
                                         ? Container()
                                         : Align(
-                                            child: Text(
-                                              (widget.product.base_price)
-                                                      .toStringAsFixed(2) +
-                                                  widget
-                                                      .product.currency_symbol,
-                                              overflow: TextOverflow.clip,
-                                              style: TextStyle(
-                                                  decoration: TextDecoration
-                                                      .lineThrough,
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.bold,
-                                                  color: fontColor
-                                                      .withOpacity(0.5)),
-                                            ),
+                                            child: widget.product.base_price ==
+                                                    0
+                                                ? Text(
+                                                    'Price is determined upon request',
+                                                    overflow: TextOverflow.clip,
+                                                    textAlign: TextAlign.center,
+                                                    style: TextStyle(
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: fontColor
+                                                            .withOpacity(0.5)),
+                                                  )
+                                                : Text(
+                                                    (widget.product.base_price)
+                                                            .toStringAsFixed(
+                                                                2) +
+                                                        widget.product
+                                                            .currency_symbol,
+                                                    overflow: TextOverflow.clip,
+                                                    style: TextStyle(
+                                                        decoration:
+                                                            TextDecoration
+                                                                .lineThrough,
+                                                        fontSize: 12,
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        color: fontColor
+                                                            .withOpacity(0.5)),
+                                                  ),
                                             alignment: Alignment.topLeft,
                                           ),
                                     Align(
                                       alignment: Alignment.bottomCenter,
-                                      child: Text(
-                                        widget.product.discount != null ||
-                                                widget.product.discount != 0
-                                            ? (widget.product.base_price -
-                                                        widget.product.discount)
-                                                    .toStringAsFixed(2) +
-                                                widget.product.currency_symbol
-                                            : widget.product.base_price
-                                                    .toStringAsFixed(2) +
-                                                widget.product.currency_symbol,
-                                        style: TextStyle(
-                                            fontSize: 15,
-                                            fontWeight: FontWeight.bold,
-                                            color: primaryColor),
-                                      ),
+                                      child: widget.product.base_price == 0
+                                          ? Text(
+                                              'Price is determined upon request',
+                                              overflow: TextOverflow.clip,
+                                              textAlign: TextAlign.center,
+                                              style: TextStyle(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: fontColor
+                                                      .withOpacity(0.5)),
+                                            )
+                                          : Text(
+                                              widget.product.discount != null ||
+                                                      widget.product
+                                                              .discount !=
+                                                          0
+                                                  ? (widget.product.base_price -
+                                                              widget.product
+                                                                  .discount)
+                                                          .toStringAsFixed(2) +
+                                                      widget.product
+                                                          .currency_symbol
+                                                  : widget.product.base_price
+                                                          .toStringAsFixed(2) +
+                                                      widget.product
+                                                          .currency_symbol,
+                                              style: TextStyle(
+                                                  fontSize: 15,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: primaryColor),
+                                            ),
                                     ),
                                   ],
                                 ),
@@ -214,33 +225,7 @@ class _ProductCardState extends State<ProductCard> {
                                                   IconButton(
                                                     icon: Icon(Icons.remove),
                                                     onPressed: () {
-                                                      if (value.productsList[
-                                                              widget.product.id
-                                                                  .toString()] !=
-                                                          null) {
-                                                        value.updateCartLocal(
-                                                            context,
-                                                            widget.product.id,
-                                                            (value.productsList[
-                                                                    widget
-                                                                        .product
-                                                                        .id
-                                                                        .toString()] -
-                                                                1),
-                                                            lowerLimit: 1,
-                                                            upperLimit: widget
-                                                                .product
-                                                                .current_stock);
-                                                      } else {
-                                                        value.updateCartLocal(
-                                                            context,
-                                                            widget.product.id,
-                                                            1,
-                                                            lowerLimit: 1,
-                                                            upperLimit: widget
-                                                                .product
-                                                                .current_stock);
-                                                      }
+                                                      onPressRemove(value);
                                                     },
                                                     color: primaryColor,
                                                   ),
@@ -258,33 +243,7 @@ class _ProductCardState extends State<ProductCard> {
                                                   IconButton(
                                                     icon: Icon(Icons.add),
                                                     onPressed: () {
-                                                      if (value.productsList[
-                                                              widget.product.id
-                                                                  .toString()] !=
-                                                          null) {
-                                                        value.updateCartLocal(
-                                                            context,
-                                                            widget.product.id,
-                                                            (value.productsList[
-                                                                    widget
-                                                                        .product
-                                                                        .id
-                                                                        .toString()] +
-                                                                1),
-                                                            lowerLimit: 1,
-                                                            upperLimit: widget
-                                                                .product
-                                                                .current_stock);
-                                                      } else {
-                                                        value.updateCartLocal(
-                                                            context,
-                                                            widget.product.id,
-                                                            1,
-                                                            lowerLimit: 1,
-                                                            upperLimit: widget
-                                                                .product
-                                                                .current_stock);
-                                                      }
+                                                      onPressAdd(value);
                                                     },
                                                     color: primaryColor,
                                                   ),
@@ -328,10 +287,13 @@ class _ProductCardState extends State<ProductCard> {
                       borderRadius: BorderRadius.circular(5),
                       color: Colors.orange.withOpacity(0.2)),
                   padding: EdgeInsets.fromLTRB(5, 0, 5, 0),
-                  child: Text(
-                    '1 ' + widget.product.unit,
-                    style: TextStyle(fontSize: 12, color: Colors.deepOrange),
-                  ),
+                  child: widget.product.unit == null
+                      ? null
+                      : Text(
+                          '1 ' + widget.product.unit,
+                          style:
+                              TextStyle(fontSize: 12, color: Colors.deepOrange),
+                        ),
                 ),
               ],
             ),
@@ -375,5 +337,35 @@ class _ProductCardState extends State<ProductCard> {
         );
       },
     );
+  }
+
+  /// Add to cart
+  onPressAdd(value) {
+    /// if product id in [productsList] will increase quantity in cart
+    if (value.productsList[widget.product.id.toString()] != null) {
+      value.updateCartLocal(context, widget.product.id,
+          (value.productsList[widget.product.id.toString()] + 1),
+          lowerLimit: 1, upperLimit: widget.product.current_stock);
+    }
+
+    /// if product id not in [productsList] will add id to productsList and set quantity '1'
+    else {
+      value.updateCartLocal(context, widget.product.id, 1,
+          lowerLimit: 1, upperLimit: widget.product.current_stock);
+    }
+  }
+
+  /// remove from cart
+  onPressRemove(value) {
+    /// if product id in [productsList] will decrease quantity in cart
+    if (value.productsList[widget.product.id.toString()] != null) {
+      value.updateCartLocal(context, widget.product.id,
+          (value.productsList[widget.product.id.toString()] - 1),
+          lowerLimit: 1, upperLimit: widget.product.current_stock);
+    } else {
+      /// if product id not in [productsList] will add id to productsList and set quantity '1'
+      value.updateCartLocal(context, widget.product.id, 1,
+          lowerLimit: 1, upperLimit: widget.product.current_stock);
+    }
   }
 }

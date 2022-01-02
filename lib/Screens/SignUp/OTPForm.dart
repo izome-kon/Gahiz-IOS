@@ -4,6 +4,7 @@ import 'package:denta_needs/Helper/global.dart';
 import 'package:denta_needs/Helper/valedator.dart';
 import 'package:denta_needs/Provider/register_provider.dart';
 import 'package:denta_needs/Screens/Login/login.dart';
+import 'package:denta_needs/Screens/SignUp/user_info.dart';
 import 'package:denta_needs/Utils/theme.dart';
 import 'package:denta_needs/app_config.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -19,19 +20,14 @@ class OTPForm extends StatefulWidget {
   _UserInfoState createState() => _UserInfoState();
 }
 
-enum AccountType { DOCTOR, STUDENT }
-
 class _UserInfoState extends State<OTPForm> {
   AccountType type;
 
+  /// Signup button is loading
   bool loading = false;
 
+  /// Used for increase time for resend otp message
   int count = 1;
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +51,8 @@ class _UserInfoState extends State<OTPForm> {
                 children: [
                   Flexible(
                     child: Text(
-                      getLang(context, 'We have sent a 6-digit code to verify your mobile number'),
+                      getLang(context,
+                          'We have sent a 6-digit code to verify your mobile number'),
                       textAlign: TextAlign.center,
                       style: TextStyle(
                         fontSize: 14,
@@ -129,7 +126,8 @@ class _UserInfoState extends State<OTPForm> {
                           child: Text(
                             value.timeOutAfter == 0
                                 ? getLang(context, 'Resend Code')
-                                : getLang(context, "Resend Code After")+' ( ${value.timeOutAfter} )',
+                                : getLang(context, "Resend Code After") +
+                                    ' ( ${value.timeOutAfter} )',
                             style: TextStyle(
                                 color: value.timeOutAfter == 0
                                     ? primaryColor
@@ -147,18 +145,24 @@ class _UserInfoState extends State<OTPForm> {
     );
   }
 
+  /// on click resend  otp message
   Future<void> onClickResend(RegisterProvider value) async {
     if (count < 2) count++;
+
+    /// get instance from firebaseAuth
     var _auth = FirebaseAuth.instance;
+
+    /// Set time for available resend otp button
     value.setTimeOut = 30 * count;
 
+    /// Verify user  phone number
     await _auth.verifyPhoneNumber(
-      phoneNumber: '+20' + int.parse(value.phone).toString(),
+      /// use [int.parse()] fun for remove first digit if it is '0'
+      phoneNumber: value.countryCode + int.parse(value.phone).toString(),
       verificationCompleted: (phoneAuthCredential) async {
         setState(() {
           loading = false;
         });
-        //signInWithPhoneAuthCredential(phoneAuthCredential);
       },
       timeout: Duration(seconds: value.timeOutAfter * count),
       verificationFailed: (verificationFailed) async {
@@ -172,7 +176,6 @@ class _UserInfoState extends State<OTPForm> {
           ),
           displayDuration: Duration(seconds: 1),
         );
-        print(verificationFailed.message);
       },
       codeSent: (verificationId, resendingToken) async {
         value.startTimer();
@@ -181,9 +184,7 @@ class _UserInfoState extends State<OTPForm> {
           value.verificationId = verificationId;
         });
       },
-      codeAutoRetrievalTimeout: (verificationId) async {
-        print('time out');
-      },
+      codeAutoRetrievalTimeout: (verificationId) async {},
     );
   }
 }

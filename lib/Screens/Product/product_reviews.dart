@@ -46,9 +46,6 @@ class _ProductReviewsState extends State<ProductReviews> {
     fetchData();
 
     _xcrollController.addListener(() {
-      //print("position: " + _xcrollController.position.pixels.toString());
-      //print("max: " + _xcrollController.position.maxScrollExtent.toString());
-
       if (_xcrollController.position.pixels ==
           _xcrollController.position.maxScrollExtent) {
         setState(() {
@@ -89,7 +86,7 @@ class _ProductReviewsState extends State<ProductReviews> {
   }
 
   onTapReviewSubmit(context) async {
-    if (is_logged_in.value == false) {
+    if (is_logged_in.$ == false) {
       ToastComponent.showDialog("You need to login to give a review", context,
           gravity: Toast.CENTER, duration: Toast.LENGTH_LONG);
       return;
