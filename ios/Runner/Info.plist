@@ -45,10 +45,6 @@
 	<string>This app needs access to location when open.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>We need to access to the microphone to record audio file</string>
-<<<<<<< HEAD
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>To Enable access to Photo Library</string>
-=======
 	<key>NSContactsUsageDescription</key>
 	<string>We need to access contacts.</string>
 	<key>NSCalendarsUsageDescription</key>
@@ -61,7 +57,6 @@
 	<string>We need to access to the device motion data</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>We need to send data to Apple’s speech recognition servers.</string>
->>>>>>> f7727e26fe511bc10a46cc48e926ccbbcb39d5c8
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
