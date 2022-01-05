@@ -36,11 +36,9 @@
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSAppleMusicUsageDescription</key>
-	<string>We need to access to media library.</string>
-	<key>NSCalendarsUsageDescription</key>
-	<string>We need to access calendar data.</string>
+	<string>We need to access to media library. To take a picture of the product and update profile picture.</string>
 	<key>NSCameraUsageDescription</key>
-	<string>To take Images from Camera</string>
+	<string>To take Images from Camera To take a picture of the product</string>
 	<key>NSContactsUsageDescription</key>
 	<string>We need to access contacts.</string>
 	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
@@ -54,7 +52,7 @@
 	<key>NSMotionUsageDescription</key>
 	<string>We need to access to the device motion data</string>
 	<key>NSPhotoLibraryUsageDescription</key>
-	<string>We need to access to photo library.</string>
+	<string>We need to access to photo library for update profile picture.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>We need to send data to Apple’s speech recognition servers.</string>
 	<key>UIBackgroundModes</key>
