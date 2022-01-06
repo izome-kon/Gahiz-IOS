@@ -221,5 +221,8 @@
   "Uploading..": "جاري رفع ..",
   "Finish":"إنهاء",
   "Click and hold on the product to quickly add it to your cart": "انقر مع الاستمرار فوق المنتج لإضافته بسرعة إلى سلة التسوق الخاصة بك",
-  "Click and hold on cart to order voice, image or text": "انقر مع الاستمرار على سلة التسوق لطلب صوت أو صورة أو نص"
+  "Click and hold on cart to order voice, image or text": "انقر مع الاستمرار على سلة التسوق لطلب صوت أو صورة أو نص",
+  "We need to confirm the order and prices and then click on the confirm button below.":"برجاء التأكد من الطلب والأسعار ومن ثم انقر على زر تأكيد بالاسفل",
+"Confirm Order":"تأكيد الطلب",
+"Your order has not yet been completed. Please review the order and prices and confirm the order by clicking on the Confirm button at the bottom of the screen.":"طلبك لم يكتمل بعد برجاء مراجعة الطلب والاسعار وتأكيد الطلب بالضغط على زر تأكيد في اسفل الشاشة"
 }

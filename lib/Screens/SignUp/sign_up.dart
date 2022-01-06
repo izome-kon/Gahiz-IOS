@@ -311,6 +311,9 @@ class _LoginState extends State<SignUp> {
       });
 
       if (authCredential.user != null) {
+print(registerProvider.countryCode +
+                    int.parse(registerProvider.phone).toString());
+
         authApi
             .getSignupResponse(
                 name: registerProvider.FName + " " + registerProvider.LName,

@@ -220,5 +220,8 @@
   "Uploading..": "Uploading..",
   "Finish":"Finish",
   "Click and hold on the product to quickly add it to your cart": "Click and hold on the product to quickly add it to your cart",
-  "Click and hold on cart to order voice, image or text": "Click and hold on cart to order voice, image or text"
+  "Click and hold on cart to order voice, image or text": "Click and hold on cart to order voice, image or text",
+  "We need to confirm the order and prices and then click on the confirm button below.":"Please confirm the order and prices, and then click the confirm button below",
+  "Your order has not yet been completed. Please review the order and prices and confirm the order by clicking on the Confirm button at the bottom of the screen.":"Your order has not yet been completed. Please review the order and prices and confirm the order by clicking on the Confirm button at the bottom of the screen.",
+  "Confirm Order":"Confirm Order"
 }
