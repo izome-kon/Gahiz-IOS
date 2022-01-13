@@ -22,8 +22,8 @@ class SharedValueHelper {
   static int messagesCount;
 
   static chatInit() async {
-    Freshchat.init("e4946bb4-ff05-416c-8a21-ee457be8996d",
-        "fde2d759-d597-4f93-8947-61e5fdde84d3", "msdk.freshchat.com",
+    Freshchat.init("bc07ec95-073b-4518-b6cb-a6d6fd558d99",
+        "e6d551b6-f782-46ef-975a-6109bf4e569f", "msdk.freshchat.com",
         stringsBundle: "FCCustomLocalizable",
         errorLogsEnabled: true,
         teamMemberInfoVisible: true,

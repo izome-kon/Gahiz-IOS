@@ -6,6 +6,7 @@ import 'package:denta_needs/Provider/cart_provider.dart';
 import 'package:denta_needs/Provider/user_provider.dart';
 import 'package:denta_needs/Responses/Order/order_detail_response.dart';
 import 'package:denta_needs/Responses/Order/order_item_response.dart';
+import 'package:denta_needs/Screens/MyOrders/order_feedback.dart';
 import 'package:denta_needs/Screens/MyOrders/persistentHander.dart';
 import 'package:denta_needs/Utils/theme.dart';
 import 'package:denta_needs/app_config.dart';
@@ -57,6 +58,9 @@ class _PaymentPageState extends State<OrderDetailsPage> {
   setStepIndex(key) {
     print(key);
     _stepIndex = _steps.indexOf(key);
+    print(orderDetailsPage.detailed_orders[0].rate);
+    if (_stepIndex >= 4 && orderDetailsPage.detailed_orders[0].rate == 0.0)
+      showRate();
     setState(() {});
   }
 
@@ -784,6 +788,14 @@ class _PaymentPageState extends State<OrderDetailsPage> {
     );
   }
 
+  showRate() {
+    showDialog(
+        context: context,
+        builder: (_) => OrderFeedback(
+              id: widget.id,
+            ));
+  }
+
   @override
   void initState() {
     getData();
@@ -794,13 +806,11 @@ class _PaymentPageState extends State<OrderDetailsPage> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () {
-        if(_stepIndex!=1){
-          return Future.value(true);
-        }
+        if (_stepIndex != 1) return Future.value(true);
         CoolAlert.show(
           context: context,
-          
-          cancelBtnText:  'Go To Home',
+          showCancelBtn: true,
+          // cancelBtnText: getLang(context, 'cancel'),
           onCancelBtnTap: () {
             Navigator.pop(context);
             Navigator.pop(context);
@@ -810,7 +820,7 @@ class _PaymentPageState extends State<OrderDetailsPage> {
           },
           type: CoolAlertType.warning,
           backgroundColor: whiteColor,
-          showCancelBtn: true,
+          cancelBtnText: 'Go To Home',
           confirmBtnText: getLang(context, 'Confirm Order'),
           title: getLang(context, "Warning.."),
           text: getLang(context,

@@ -64,4 +64,29 @@ class OrderRepository {
     print(response.body.toString());
     return orderCreateResponseFromJson(response.body);
   }
+
+  Future<OrderCreateResponse> rateOrder({
+    @required int orderId,
+    @required double rate,
+    String message,
+  }) async {
+    print("${AppConfig.BASE_URL}/order/rate");
+    print(orderId);
+    var post_body = jsonEncode({
+      "order_id": orderId,
+      "rate": rate,
+      "rate_message": message,
+    });
+    print(access_token.$);
+    final response = await http.post(
+        Uri.parse("${AppConfig.BASE_URL}/order/rate"),
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer ${access_token.$}"
+        },
+        body: post_body);
+
+    print(response.body.toString());
+    return orderCreateResponseFromJson(response.body);
+  }
 }

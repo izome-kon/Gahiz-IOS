@@ -55,7 +55,13 @@ class _RecordOrderScreenState extends State<TackTextScreen> {
       appBar: AppBar(
         backgroundColor: Colors.white,
         centerTitle: true,
-        actions: [],
+        actions: [
+          text.length != 0
+              ? IconButton(
+                  onPressed: onPressAddToCart,
+                  icon: Icon(Icons.add_shopping_cart_outlined))
+              : Container()
+        ],
         iconTheme: IconThemeData(color: primaryColor),
         title: Text(
           getLang(context, 'write Order'),
@@ -101,79 +107,83 @@ class _RecordOrderScreenState extends State<TackTextScreen> {
           ),
         ),
       ]),
-      bottomNavigationBar: BottomAppBar(
-        child: Container(
-          alignment: Alignment.center,
-          height: 60,
-          color: text.isEmpty ? Colors.grey : primaryColor,
-          width: MediaQuery.of(context).size.width,
-          child: MaterialButton(
-            onPressed: () async {
-              if (text.isNotEmpty) {
-                CoolAlert.show(
-                    context: context,
-                    barrierDismissible: false,
-                    lottieAsset: 'assets/lottie/plan.json',
-                    type: CoolAlertType.loading,
-                    title: getLang(context, "Uploading.."));
-                await CartRepository()
-                    .getCartAddVoiceRecordResponse(
-                        filename: null,
-                        image: null,
-                        user_id: user_id.$,
-                        description: text,
-                        owner_user_id: AppConfig.TEXT_ORDER_ID,
-                        order_type: 'Text')
-                    .then((value) {
-                  if (value.result) {
-                    showTopSnackBar(
-                      context,
-                      CustomSnackBar.success(
-                        message: value.message,
-                        backgroundColor: Colors.green,
-                      ),
-                      displayDuration: Duration(seconds: 2),
-                    );
-                    Provider.of<CartProvider>(context,listen: false).sendUpdateRequest=true;
-                    Navigator.of(context)..pop()..pop();
-                  } else {
-                    Navigator.of(context)..pop();
-                    showTopSnackBar(
-                      context,
-                      CustomSnackBar.error(
-                        message: value.message,
-                      ),
-                      displayDuration: Duration(seconds: 2),
-                    );
-                  }
-                });
-              }
-            },
-            child: Container(
-                alignment: Alignment.center,
-                width: MediaQuery.of(context).size.width,
-                height: 60,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Icon(
-                      Icons.shopping_bag_outlined,
-                      color: Colors.white,
-                      size: 25,
-                    ),
-                    SizedBox(
-                      width: 5,
-                    ),
-                    Text(
-                      getLang(context, 'add_to_cart'),
-                      style: TextStyle(color: Colors.white, fontSize: 18),
-                    ),
-                  ],
-                )),
-          ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      floatingActionButton: Container(
+        alignment: Alignment.center,
+        height: 60,
+        color: text.isEmpty ? Colors.grey : primaryColor,
+        width: MediaQuery.of(context).size.width,
+        child: MaterialButton(
+          onPressed: onPressAddToCart,
+          child: Container(
+              alignment: Alignment.center,
+              width: MediaQuery.of(context).size.width,
+              height: 60,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.shopping_bag_outlined,
+                    color: Colors.white,
+                    size: 25,
+                  ),
+                  SizedBox(
+                    width: 5,
+                  ),
+                  Text(
+                    getLang(context, 'add_to_cart'),
+                    style: TextStyle(color: Colors.white, fontSize: 18),
+                  ),
+                ],
+              )),
         ),
       ),
     );
+  }
+
+  onPressAddToCart() async {
+    if (text.isNotEmpty) {
+      CoolAlert.show(
+          context: context,
+          barrierDismissible: false,
+          lottieAsset: 'assets/lottie/plan.json',
+          type: CoolAlertType.loading,
+          title: getLang(context, "Uploading.."));
+      await CartRepository()
+          .getCartAddVoiceRecordResponse(
+              filename: null,
+              image: null,
+              user_id: user_id.$,
+              description: text,
+              owner_user_id: AppConfig.TEXT_ORDER_ID,
+              order_type: 'Text')
+          .then((value) {
+        if (value.result) {
+          showTopSnackBar(
+            context,
+            CustomSnackBar.success(
+              message: value.message,
+              backgroundColor: Colors.green,
+            ),
+            displayDuration: Duration(seconds: 2),
+          );
+          Provider.of<CartProvider>(context, listen: false).sendUpdateRequest =
+              true;
+          Navigator.of(context)
+            ..pop()
+            ..pop();
+        } else {
+          Navigator.of(context)..pop();
+          showTopSnackBar(
+            context,
+            CustomSnackBar.error(
+              message: value.message,
+            ),
+            displayDuration: Duration(seconds: 2),
+          );
+        }
+      });
+    }
   }
 }
