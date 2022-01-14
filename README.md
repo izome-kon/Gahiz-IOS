@@ -1,10 +1,10 @@
-![pub get](https://raw.githubusercontent.com/izome-kon/dental-needs/master/assets/images/P6YSG41.png?token=GHSAT0AAAAAABPMZZKPPUWVP2BPVCYLPYWSYPBO7WA)
+![pub get](/assets/images/P6YSG41.png)
 
 # Gahiz - جاهز
 
 Simple overview of use/purpose.
 
-## Description
+## Descriptions
 
 GAHiZ Application allows dentists to view a variety of the best dental products on the market at competitive prices and provides a new way to easily and efficiently place, track and receive their orders.
 
