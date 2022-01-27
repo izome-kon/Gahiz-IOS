@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/Widget.Freshchat.CalendarMeetingBannerContainer">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        style="@style/Widget.Freshchat.CalendarMeetingBannerIndicator" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/freshchat_meeting_banner_date_text"
+        style="?attr/freshchatCalendarBannerMeetingDateTextStyle"
+        tools:text="24 Feb 2020 4:30 PM" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        style="?attr/freshchatCalendarBannerMeetingViewTextStyle"
+        android:text="@string/freshchat_calendar_meeting_banner_view_btn" />
+
+</LinearLayout>

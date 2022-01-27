@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@drawable/freshchat_message_unknown_bg"
+    android:padding="12dp"
+    android:layout_marginBottom="5dp">
+
+    <ImageView
+        style="?attr/freshchatUnsupportedMessageIconStyle"/>
+
+    <TextView
+        android:id="@+id/freshchat_unknown_fragment_text"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textDirection="firstStrong"
+        android:textAlignment="viewStart"
+        android:gravity="start"/>
+</LinearLayout>

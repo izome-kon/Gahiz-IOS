@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center_horizontal"
+    android:background="@color/freshchat_calendar_event_card_bg"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/freshchat_calendar_event_card_confirmation"
+        style="?attr/freshchatCalendarEventCardConfirmationStatusTextStyle"
+        tools:text="Scheduled" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/freshchat_calendar_event_card_duration"
+        style="?attr/freshchatCalendarEventCardMeetingDurationTextStyle"
+        tools:text="30 mins" />
+
+    <FrameLayout
+        android:id="@+id/freshchat_calendar_avatars_container"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/freshchat_calendar_agent_avatar"
+            style="?attr/freshchatCalendarEventCardAgentAvatarStyle" />
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/freshchat_calendar_user_avatar"
+            style="?attr/freshchatCalendarEventCardUserAvatarStyle"
+            android:layout_gravity="end" />
+
+    </FrameLayout>
+
+    <androidx.appcompat.widget.AppCompatTextView
+        style="?attr/freshchatCalendarEventCardMeetingDescTextStyle"
+        android:text="@string/freshchat_calendar_meeting_with_our_team" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/freshchat_calendar_timeslot_view"
+        style="?attr/freshchatCalendarEventCardMeetingTimeSlotTextStyle"
+        tools:text="4:30 PM - 5:30 PM" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/freshchat_calendar_day_label"
+        style="?attr/freshchatCalendarEventCardMeetingDateTextStyle"
+        tools:text="Monday, 24 Feb 2020" />
+
+</LinearLayout>

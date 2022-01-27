@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/freshchat_drop_down_input_frame"
+    style="?attr/freshchatDropDownHintTextStyle"
+    android:background="@drawable/freshchat_drop_down_box_bg"
+    android:clickable="true"
+    android:focusable="true"
+    android:foreground="?attr/freshchatActionSelectableItemBackground" />

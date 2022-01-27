@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tools_label_duration">Duration</string>
+    <string name="freshchat_default_agent_name">الدعم</string>
+</resources>

@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Message list item background color -->
+    <color name="freshchat_message_list_item_bg">@null</color>
+
+    <!-- Message reply view background color -->
+    <color name="freshchat_message_reply_view_bg">@color/freshchat_white</color>
+
+    <!-- Message reply edit text view text color -->
+    <color name="freshchat_message_reply_text">#252525</color>
+
+    <!-- Message reply edit text view hint text color -->
+    <color name="freshchat_message_reply_hint_text">#606060</color>
+
+    <!-- Message unread count bubble background in channel list screen -->
+    <color name="freshchat_channel_unread_count_bg">#D32F2F</color>
+
+    <!-- Notification accent color i.e Notification#color (small icon background) Note: Works only in Android 5.0+ -->
+    <color name="freshchat_notification_accent_color">@android:color/transparent</color>
+
+    <!-- Background color for voting view in FAQ Detail -->
+    <color name="freshchat_voting_view_bg">@color/freshchat_background_light</color>
+
+    <!-- Divider colors -->
+    <!-- Divider between each item in the article list -->
+    <color name="freshchat_article_list_divider">#C7C7C7</color>
+
+    <!-- Divider above the voting view in FAQ Detail -->
+    <color name="freshchat_voting_view_divider">#BBB</color>
+
+    <!-- Divider between each message item in the message list -->
+    <color name="freshchat_message_list_divider">@null</color>
+
+    <!-- Divider between message list and reply view -->
+    <color name="freshchat_message_list_reply_view_divider">#D0D0D0</color>
+    <color name="freshchat_chat_resolution_prompt_divider">#BBB</color>
+
+    <color name="freshchat_grey_darkest">#707C92</color>
+
+    <!-- Misc Colors -->
+    <color name="freshchat_white">#ffffffff</color>
+    <color name="freshchat_black">#ff000000</color>
+    <color name="freshchat_background_light">#F6F8FA</color>
+    <color name="freshchat_text_color">#707070</color>
+    <color name="freshchat_channel_alt_text_bg">#3F51B5</color>
+    <color name="freshchat_category_alt_text_bg">#FF0199D4</color>
+    <color name="freshchat_category_normal">@color/freshchat_white</color>
+    <color name="freshchat_category_selected">#D8D8D8</color>
+
+    <color name="freshchat_seekbar_bg_start">#000000</color>
+    <color name="freshchat_seekbar_bg_center">#000000</color>
+    <color name="freshchat_seekbar_bg_end">#000000</color>
+
+    <color name="freshchat_seekbar_progress_start">#505050</color>
+    <color name="freshchat_seekbar_progress_center">#505050</color>
+    <color name="freshchat_seekbar_progress_end">#505050</color>
+
+    <color name="freshchat_seekbar_sec_progress_start">#80FFD300</color>
+    <color name="freshchat_seekbar_sec_progress_center">#80FFB600</color>
+    <color name="freshchat_seekbar_sec_progress_end">#A0FFCB00</color>
+
+    <color name="freshchat_visualizer_bg_start">#FFFFFF</color>
+    <color name="freshchat_visualizer_bg_center">#FFFFFF</color>
+    <color name="freshchat_visualizer_bg_end">#FFFFFF</color>
+
+    <color name="freshchat_visualizer_progress_start">#505050</color>
+    <color name="freshchat_visualizer_progress_center">#505050</color>
+    <color name="freshchat_visualizer_progress_end">#505050</color>
+
+    <color name="freshchat_visualizer_sec_progress_start">#80FFD300</color>
+    <color name="freshchat_visualizer_sec_progress_center">#80FFB600</color>
+    <color name="freshchat_visualizer_sec_progress_end">#A0FFCB00</color>
+
+    <color name="freshchat_contact_us_btn_bg_normal">#FF0199D4</color>
+    <color name="freshchat_contact_us_btn_bg_pressed">#1976D2</color>
+
+    <color name="freshchat_message_unknown_bg_stoke">#26091E42</color>
+    <color name="freshchat_message_unknown_bg_solid">#B0FFFFFF</color>
+
+    <!--Quick replies-->
+    <color name="freshchat_quick_reply_chip_bg">#FF0199D4</color>
+
+    <!--Drop Down-->
+    <color name="freshchat_drop_down_hint_text_color">#3A4B67</color>
+    <color name="freshchat_drop_down_border_color">#FF0199D4</color>
+
+    <color name="freshchat_bottom_sheet_bg_color">#55606060</color>
+
+
+    <!-- Carousel Card -->
+    <color name="freshchat_carousel_card_bg">@android:color/transparent</color>
+    <color name="freshchat_carousel_card_title_text">#DE091E42</color>
+    <color name="freshchat_carousel_card_description_text">#DE091E42</color>
+    <color name="freshchat_carousel_card_btn_text">#0053BF</color>
+    <color name="freshchat_carousel_card_selected_text">#8A091E42</color>
+
+    <!-- Calendar -->
+    <color name="freshchat_calendar_primary_text_color">#DE091E42</color>
+    <color name="freshchat_calendar_secondary_text_color">#BD091E42</color>
+    <color name="freshchat_calendar_minor_text_color">#8A091E42</color>
+
+    <color name="freshchat_calendar_solid_button_bg_color">#0053BF</color>
+    <color name="freshchat_calendar_solid_button_text_color">#FFFFFF</color>
+
+    <color name="freshchat_calendar_find_slot_bg">@color/freshchat_calendar_solid_button_bg_color</color>
+    <color name="freshchat_calendar_find_slot_text">@color/freshchat_calendar_solid_button_text_color</color>
+
+    <color name="freshchat_calendar_titlebar_divider">#1F000000</color>
+    <color name="freshchat_calendar_popup_titlebar_bg">@android:color/transparent</color>
+    <color name="freshchat_calendar_popup_content_bg">@android:color/transparent</color>
+    <color name="freshchat_calendar_title">@color/freshchat_calendar_primary_text_color</color>
+    <color name="freshchat_calendar_duration">@color/freshchat_calendar_secondary_text_color</color>
+    <color name="freshchat_calendar_next_button_bg_enabled">#0053BF</color>
+    <color name="freshchat_calendar_next_button_bg_disabled">#9AB6DB</color>
+    <color name="freshchat_calendar_next_button_text">@color/freshchat_calendar_solid_button_text_color</color>
+    <color name="freshchat_calendar_next_button_text_disabled">#C2D3E9</color>
+    <color name="freshchat_calendar_email_hint">@color/freshchat_calendar_minor_text_color</color>
+    <color name="freshchat_calendar_email_request_desc">@color/freshchat_calendar_primary_text_color</color>
+    <color name="freshchat_calendar_not_interested_text">@color/freshchat_calendar_minor_text_color</color>
+    <color name="freshchat_calendar_button_outline_text">@color/freshchat_grey_darkest</color>
+    <color name="freshchat_calendar_button_outline">#DADADA</color>
+    <color name="freshchat_calendar_day_header_text">#263857</color>
+    <color name="freshchat_calendar_part_of_day_header">#88000000</color>
+    <color name="freshchat_calendar_day_header_bg">@color/freshchat_white</color>
+    <color name="freshchat_calendar_timeslot">@color/freshchat_calendar_secondary_text_color</color>
+    <color name="freshchat_calendar_state_text">@color/freshchat_calendar_primary_text_color</color>
+    <color name="freshchat_calendar_email_text">@color/freshchat_message_reply_text</color>
+    <color name="freshchat_calendar_change_slot">@color/freshchat_calendar_minor_text_color</color>
+    <color name="freshchat_calendar_confirm_slot">@color/freshchat_calendar_solid_button_text_color</color>
+    <color name="freshchat_calendar_confirm_timeslot_text">@color/freshchat_calendar_primary_text_color</color>
+    <color name="freshchat_calendar_event_card_text">@color/freshchat_calendar_primary_text_color</color>
+    <color name="freshchat_calendar_event_card_bg">@android:color/transparent</color>
+    <color name="freshchat_calendar_meeting_banner_color">#243756</color>
+
+    <!-- Live Translation-->
+    <color name="freshchat_original_message_bar">#8A091E42</color>
+    <color name="freshchat_translation_toggle_button_bg">#D7D8DA</color>
+
+    <!--Omni KBASE-->
+    <color name="freshchat_faq_error_title_text">#283A5A</color>
+    <color name="freshchat_faq_error_subtitle_text">#495973</color>
+    <color name="freshchat_faq_progress_color">@color/freshchat_carousel_card_btn_text</color>
+    <color name="freshchat_faq_pagination_error_with_retry_text">@color/freshchat_grey_darkest</color>
+
+</resources>

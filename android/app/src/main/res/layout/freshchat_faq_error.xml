@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.AppCompatImageView
+        android:id="@+id/freshchat_error_image"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="?attr/freshchatErrorImage" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        style="?attr/freshchatErrorTitleTextStyle"
+        android:layout_marginTop="25dp"
+        android:text="@string/freshchat_error_was_encountered" />
+
+    <androidx.appcompat.widget.AppCompatTextView
+        android:id="@+id/faq_retry"
+        style="?attr/freshchatRetryButtonStyle"
+        android:layout_marginTop="21dp"
+        android:text="@string/freshchat_retry" />
+
+</LinearLayout>

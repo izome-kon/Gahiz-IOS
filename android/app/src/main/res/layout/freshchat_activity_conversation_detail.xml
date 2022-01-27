@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <ProgressBar
+        android:id="@+id/freshchat_activity_conversation_detail_progressbar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:indeterminate="true"
+        android:visibility="gone" />
+
+    <RelativeLayout android:id="@+id/freshchat_activity_conversation_detail_content"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:focusableInTouchMode="true">
+
+        <include
+            android:id="@+id/freshchat_conversation_banner_message_text"
+            layout="@layout/freshchat_partial_conversation_banner_message"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/freshchat_conv_detail_divider"
+            android:orientation="vertical"
+            android:id="@+id/freshchat_message_container"
+            android:layout_below="@+id/freshchat_conversation_banner_message_text">
+
+            <include
+                android:id="@+id/freshchat_conversation_meeting_banner"
+                layout="@layout/freshchat_calendar_meeting_banner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:visibility="gone" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/freshchat_conv_detail_list"
+                style="?attr/freshchatMessageListStyle"
+                android:layout_width="match_parent"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:elevation="@dimen/freshchat_message_composer_elevation"
+                android:visibility="gone"
+                android:id="@+id/freshchat_quick_reply_container"
+                android:background="?attr/freshchatQuickReplyViewBgColor">
+
+                <com.freshchat.consumer.sdk.ui.FlowLayout
+                    android:id="@+id/freshchat_quick_reply_flowlayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:paddingBottom="16dp"
+                    android:paddingEnd="16dp"
+                    android:paddingLeft="16dp"
+                    android:paddingRight="16dp"
+                    android:paddingStart="16dp"
+                    android:paddingTop="8dp"
+                    app:freshchatFlChildSpacing="@dimen/freshchat_quick_reply_view_row_padding"
+                    app:freshchatFlChildSpacingForLastRow="align"
+                    app:freshchatFlRowSpacing="@dimen/freshchat_quick_reply_view_column_padding" />
+            </ScrollView>
+        </LinearLayout>
+
+        <View
+            android:id="@+id/freshchat_conv_detail_divider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_above="@+id/freshchat_conv_detail_text_reply_layout"
+            android:layout_alignWithParentIfMissing="true"
+            android:background="@color/freshchat_message_list_reply_view_divider" />
+
+        <include
+            layout="@layout/freshchat_partial_text_message_frame"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/freshchat_conv_detail_voice_reply_layout"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignWithParentIfMissing="true"
+            android:visibility="gone" />
+
+        <include
+            layout="@layout/freshchat_partial_voice_message_frame"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/freshchat_chat_resolution_confirmation_layout"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:visibility="gone" />
+
+        <include
+            layout="@layout/freshchat_partial_chat_resolution_confirmation_frame"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_above="@+id/freshchat_drop_down_input_frame"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:visibility="gone" />
+
+
+        <include
+            layout="@layout/freshchat_drop_down_input"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentBottom="true"
+            android:visibility="gone" />
+
+        <include
+            layout="@layout/freshchat_drop_down_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentStart="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentBottom="true"
+            android:visibility="gone" />
+
+    </RelativeLayout>
+</RelativeLayout>

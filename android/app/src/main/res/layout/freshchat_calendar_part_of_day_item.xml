@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingStart="@dimen/freshchat_calendar_timeslot_list_padding"
+    android:paddingEnd="@dimen/freshchat_calendar_timeslot_list_padding">
+
+    <include
+        layout="@layout/freshchat_calendar_part_of_day_header"
+        tools:text="Header Text" />
+
+    <com.freshchat.consumer.sdk.ui.NonScrollableGridView
+        android:id="@+id/freshchat_calendar_timeslots_grid_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:horizontalSpacing="@dimen/freshchat_calendar_timeslots_list_item_spacing"
+        android:paddingTop="4dp"
+        android:paddingBottom="8dp"
+        android:verticalSpacing="@dimen/freshchat_calendar_timeslots_list_item_spacing"
+        tools:listitem="@layout/freshchat_calendar_timeslot_view"
+        tools:numColumns="3" />
+
+</LinearLayout>
